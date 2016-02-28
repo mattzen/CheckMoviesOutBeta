@@ -1,1 +1,9 @@
 C:\Projects_Segregated\c#\newest\CheckMoviesOutBeta1\CheckMoviesOut\bin\Debug\CheckMoviesOut.exe.config
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\bin\Debug\CheckMoviesOut.exe.config
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.MainWindow.resources
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.Properties.Resources.resources
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csproj.GenerateResource.Cache
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\bin\Debug\CheckMoviesOut.exe
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\bin\Debug\CheckMoviesOut.pdb
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.exe
+C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.pdb

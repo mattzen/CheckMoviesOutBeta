@@ -1,4 +1,5 @@
-﻿namespace CheckMoviesOut
+﻿using System.Windows.Forms;
+namespace CheckMoviesOut
 {
     partial class MainWindow
     {
@@ -49,6 +50,7 @@
             this.mainGrid.Name = "mainGrid";
             this.mainGrid.Size = new System.Drawing.Size(856, 456);
             this.mainGrid.TabIndex = 0;
+            mainGrid.CellContentClick += new DataGridViewCellEventHandler(mainGrid_CellContentClick);
             // 
             // MainWindow
             // 
