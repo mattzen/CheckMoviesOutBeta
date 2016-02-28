@@ -27,7 +27,7 @@ namespace CheckMoviesOut
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-  
+            //test branch
             this.AllowDrop = true;
             this.DragEnter += new DragEventHandler(MainWindow_DragEnter);
             this.DragDrop += new DragEventHandler(MainWindow_DragDrop);
