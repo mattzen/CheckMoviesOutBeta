@@ -13,13 +13,15 @@ namespace CheckMoviesOut
 {
     public class MoviesController
     {
-        private int rowctr = 0;
-        private int lastrowctr = 0;
+        private int _lastrowctr;
+        private int _rowctr;
         private DataGridView mainGrid;
 
         public MoviesController(DataGridView mainGrid)
         {
             this.mainGrid = mainGrid;
+            _lastrowctr = 0;
+            _rowctr = 0;
         }
 
         public string filter_valid_title(string title)
@@ -79,7 +81,7 @@ namespace CheckMoviesOut
         public async Task generate_rows(string sub)
         {
 
-            lastrowctr = rowctr;
+            _lastrowctr = _rowctr;
 
             List<string> directories = new List<string>();
             List<string> files = new List<string>();
@@ -98,24 +100,15 @@ namespace CheckMoviesOut
                     directories.Add(item);
                 }
 
-
-
                 foreach (var file in directories)
                 {
 
 
                     fullname = file.Substring(l + 1);
                     string last4 = fullname.Substring(fullname.Length - 4).ToLower();
-
-
-
-
-
                     tit = filter_valid_title(fullname);
-
                     await down_movie_desc(tit, fullname);
-
-                    rowctr++;
+                    _rowctr++;
 
                 }
             }
@@ -123,19 +116,12 @@ namespace CheckMoviesOut
             {
 
                 int ct = sub.LastIndexOf('\\');
-
                 fullname = sub.Substring(ct + 1);
-
                 tit = filter_valid_title(fullname);
-
                 await down_movie_desc(tit, fullname);
-
-                rowctr++;
+                _rowctr++;
 
             }
-
-
-
 
         }
 
@@ -167,76 +153,36 @@ namespace CheckMoviesOut
                 }
                 throw;
             }
+
             mainGrid.Rows.Add();
-
-
-            extract_cont("Title", ret, 1, rowctr, fullname);
-            extract_cont("imdbRating", ret, 3, rowctr, fullname);
-            extract_cont("imdbVotes", ret, 4, rowctr, fullname);
-            extract_cont("Genre", ret, 5, rowctr, fullname);
-            extract_cont("Director", ret, 6, rowctr, fullname);
-            extract_cont("Plot", ret, 7, rowctr, fullname);
-            extract_cont("Actors", ret, 8, rowctr, fullname);
-            extract_cont("Year", ret, 9, rowctr, fullname);
-            extract_cont("Poster", ret, 10, rowctr, fullname);
-            extract_cont("Writer", ret, 10, rowctr, fullname);
+            extract_cont("Title", ret, 1, _rowctr, fullname);
+            extract_cont("imdbRating", ret, 3, _rowctr, fullname);
+            extract_cont("imdbVotes", ret, 4, _rowctr, fullname);
+            extract_cont("Genre", ret, 5, _rowctr, fullname);
+            extract_cont("Director", ret, 6, _rowctr, fullname);
+            extract_cont("Plot", ret, 7, _rowctr, fullname);
+            extract_cont("Actors", ret, 8, _rowctr, fullname);
+            extract_cont("Year", ret, 9, _rowctr, fullname);
+            extract_cont("Poster", ret, 10, _rowctr, fullname);
+            extract_cont("Writer", ret, 10, _rowctr, fullname);
 
 
 
-            mainGrid.Rows[rowctr].Height = 100;
+            mainGrid.Rows[_rowctr].Height = 100;
 
             DataGridViewCell linkCell = new DataGridViewLinkCell();
             linkCell.Value = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all";
-            mainGrid[11, rowctr] = linkCell;
+            mainGrid[11, _rowctr] = linkCell;
 
-            mainGrid[10, rowctr].Value = fullname;
-            mainGrid[0, rowctr].Value = rowctr;
+            mainGrid[10, _rowctr].Value = fullname;
+            mainGrid[0, _rowctr].Value = _rowctr;
 
             return ret;
   
 
         }
 
-        public int check_resp(string s)
-        {
-
-
-            string exp = "Response";
-            Regex expression2 = new Regex(@exp + ".*");
-            int offset = exp.Length + 3;
-
-
-            var results2 = expression2.Matches(s.ToString());
-            string build = "";
-            foreach (Match match2 in results2)
-            {
-
-                string match = match2.ToString();
-
-
-                for (int i = 0; i < match.Length; i++)
-                {
-
-
-
-                    if (match[offset + i] == '"')
-                    {
-                        break;
-                    }
-                    build += match[offset + i];
-                }
-            }
-
-            if (build == "False")
-                return 0;
-            else
-                return 1;
-
-
-
-        }
-
-        public void extract_cont(string e, string s, int col, int row, string tit)
+        private void extract_cont(string e, string s, int col, int row, string tit)
         {
 
             string exp = e;
