@@ -40,8 +40,6 @@ namespace CheckMoviesOut
 
                 if (ctr <= 10)
                 {
-
-
                     if (match2.ToString().ToLower() != "dvdrip"
                         && match2.ToString().ToLower() != "bdrip"
                         && match2.ToString().ToLower() != "webrip"
@@ -60,8 +58,6 @@ namespace CheckMoviesOut
                          && match2.ToString().ToLower() != "hdtv"
                         )
                     {
-
-
 
                         build += match2.ToString() + "";
 
@@ -102,8 +98,6 @@ namespace CheckMoviesOut
 
                 foreach (var file in directories)
                 {
-
-
                     fullname = file.Substring(l + 1);
                     string last4 = fullname.Substring(fullname.Length - 4).ToLower();
                     tit = filter_valid_title(fullname);
@@ -134,8 +128,6 @@ namespace CheckMoviesOut
             var request = await WebRequest.Create(req).GetResponseAsync();
             try
             {
-
-
                 using (Stream responseStream = request.GetResponseStream())
                 {
                     StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
@@ -151,7 +143,7 @@ namespace CheckMoviesOut
                     String errorText = reader.ReadToEnd();
 
                 }
-                throw;
+                throw ex;
             }
 
             mainGrid.Rows.Add();
@@ -165,7 +157,6 @@ namespace CheckMoviesOut
             extract_cont("Year", ret, 9, _rowctr, fullname);
             extract_cont("Poster", ret, 10, _rowctr, fullname);
             extract_cont("Writer", ret, 10, _rowctr, fullname);
-
 
 
             mainGrid.Rows[_rowctr].Height = 100;

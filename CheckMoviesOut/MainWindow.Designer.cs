@@ -31,6 +31,7 @@ namespace CheckMoviesOut
         {
             this.button1 = new System.Windows.Forms.Button();
             this.mainGrid = new System.Windows.Forms.DataGridView();
+            this.welcomeTextBox = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mainGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,11 +51,22 @@ namespace CheckMoviesOut
             this.mainGrid.Name = "mainGrid";
             this.mainGrid.Size = new System.Drawing.Size(856, 456);
             this.mainGrid.TabIndex = 0;
-            mainGrid.CellContentClick += new DataGridViewCellEventHandler(mainGrid_CellContentClick);
+            this.mainGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.mainGrid_CellContentClick);
+            // 
+            // welcomeTextBox
+            // 
+            this.welcomeTextBox.AutoSize = true;
+            this.welcomeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.welcomeTextBox.Location = new System.Drawing.Point(241, 233);
+            this.welcomeTextBox.Name = "welcomeTextBox";
+            this.welcomeTextBox.Size = new System.Drawing.Size(416, 31);
+            this.welcomeTextBox.TabIndex = 1;
+            this.welcomeTextBox.Text = "Drag and Drop movie files/folders";
             // 
             // MainWindow
             // 
             this.ClientSize = new System.Drawing.Size(880, 500);
+            this.Controls.Add(this.welcomeTextBox);
             this.Controls.Add(this.mainGrid);
             this.Controls.Add(this.button1);
             this.Name = "MainWindow";
@@ -62,6 +74,7 @@ namespace CheckMoviesOut
             this.Load += new System.EventHandler(this.MainWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.mainGrid)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -69,6 +82,7 @@ namespace CheckMoviesOut
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridView mainGrid;
+        private Label welcomeTextBox;
     }
 }
 

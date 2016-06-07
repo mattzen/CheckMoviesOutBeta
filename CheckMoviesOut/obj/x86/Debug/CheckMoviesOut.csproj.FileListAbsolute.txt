@@ -8,3 +8,12 @@ C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\bin\Debug\CheckMoviesOut.pdb
 C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.exe
 C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.pdb
 C:\Users\Matt\Desktop\repos\Movies\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csprojResolveAssemblyReference.cache
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\bin\Debug\CheckMoviesOut.exe.config
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\bin\Debug\CheckMoviesOut.exe
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\bin\Debug\CheckMoviesOut.pdb
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.MainWindow.resources
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.Properties.Resources.resources
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csproj.GenerateResource.Cache
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.exe
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.pdb
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csprojResolveAssemblyReference.cache
