@@ -13,15 +13,10 @@ namespace CheckMoviesOut
 {
     public class MoviesController
     {
-        private int _lastrowctr;
-        private int _rowctr;
-        private DataGridView mainGrid;
 
-        public MoviesController(DataGridView mainGrid)
+        public MoviesController()
         {
-            this.mainGrid = mainGrid;
-            _lastrowctr = 0;
-            _rowctr = 0;
+
         }
 
         public string filter_valid_title(string title)
@@ -74,52 +69,7 @@ namespace CheckMoviesOut
 
         }
 
-        public async Task generate_rows(string sub)
-        {
-
-            _lastrowctr = _rowctr;
-
-            List<string> directories = new List<string>();
-            List<string> files = new List<string>();
-            string[] allowedFormats = { "avi", "mp4", "mp3", "wmv", "m4v", "mpg", "mpeg", "flv", "rmvb", "mov", "mkv" };
-            string tit = "";
-            string fullname;
-            int l = sub.Length;
-            //if folder passed
-            if (Directory.Exists(sub))
-            {
-
-                directories = Directory.GetDirectories(sub).ToList();
-                files = Directory.GetFiles(sub).ToList();
-                foreach (var item in files)
-                {
-                    directories.Add(item);
-                }
-
-                foreach (var file in directories)
-                {
-                    fullname = file.Substring(l + 1);
-                    string last4 = fullname.Substring(fullname.Length - 4).ToLower();
-                    tit = filter_valid_title(fullname);
-                    await down_movie_desc(tit, fullname);
-                    _rowctr++;
-
-                }
-            }
-            else //a file
-            {
-
-                int ct = sub.LastIndexOf('\\');
-                fullname = sub.Substring(ct + 1);
-                tit = filter_valid_title(fullname);
-                await down_movie_desc(tit, fullname);
-                _rowctr++;
-
-            }
-
-        }
-
-        public async Task<string> down_movie_desc(string title, string fullname)
+        public async Task<Movie> down_movie_desc(string title, string fullname)
         {
             string req = "http://www.omdbapi.com/?t=" + title;
 
@@ -146,116 +96,115 @@ namespace CheckMoviesOut
                 throw ex;
             }
 
-            mainGrid.Rows.Add();
-            extract_cont("Title", ret, 1, _rowctr, fullname);
-            extract_cont("imdbRating", ret, 3, _rowctr, fullname);
-            extract_cont("imdbVotes", ret, 4, _rowctr, fullname);
-            extract_cont("Genre", ret, 5, _rowctr, fullname);
-            extract_cont("Director", ret, 6, _rowctr, fullname);
-            extract_cont("Plot", ret, 7, _rowctr, fullname);
-            extract_cont("Actors", ret, 8, _rowctr, fullname);
-            extract_cont("Year", ret, 9, _rowctr, fullname);
-            extract_cont("Poster", ret, 10, _rowctr, fullname);
-            extract_cont("Writer", ret, 10, _rowctr, fullname);
+            Movie movie = new Movie();
+       
+            movie = extract_cont( ret, fullname);
 
-
-            mainGrid.Rows[_rowctr].Height = 100;
-
-            DataGridViewCell linkCell = new DataGridViewLinkCell();
-            linkCell.Value = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all";
-            mainGrid[11, _rowctr] = linkCell;
-
-            mainGrid[10, _rowctr].Value = fullname;
-            mainGrid[0, _rowctr].Value = _rowctr;
-
-            return ret;
-  
+            return movie;
 
         }
 
-        private void extract_cont(string e, string s, int col, int row, string tit)
+        private Movie extract_cont(string json, string tit)
         {
+            Movie movie = new Movie();
+            movie.FileName = tit;
 
-            string exp = e;
-            Regex expression2 = new Regex(@exp + ".*");
-            int offset = exp.Length + 3;
+            List<string> keywords = new List<string>() { 
+                "Title",
+                "imdbRating",
+                "imdbVotes",
+                "Genre",
+                "Director",
+                "Plot",
+                "Actors",
+                "Year",
+                "Writer",
+                "Poster" };
 
-            tit = tit.Replace("%20", "");
-
-
-            var results2 = expression2.Matches(s.ToString());
-
-            foreach (Match match2 in results2)
+            string value = "";
+            foreach (var keyword in keywords)
             {
 
-                string match = match2.ToString();
+                string exp = keyword;
+                Regex expression2 = new Regex(@exp + ".*");
+                int offset = exp.Length + 3;
 
-                string build = "";
+                tit = tit.Replace("%20", "");
 
-                for (int i = 0; i < match.Length; i++)
+
+                var results = expression2.Matches(json.ToString());
+                
+                foreach (Match singleMatch in results)
                 {
 
+                    string match = singleMatch.ToString();
+                   
 
-
-                    if (match[offset + i] == '"')
+                    for (int i = 0; i < match.Length; i++)
                     {
-                        break;
+
+                        if (match[offset + i] == '"')
+                        {
+                            break;
+                        }
+                        value += match[offset + i];
                     }
-                    build += match[offset + i];
                 }
 
-
-                if (e == "Poster" && build != "N/A")
-                {
-                    string dir = Directory.GetCurrentDirectory();
-                    string imgs = dir + "/imgs/";
-
-                    if (!File.Exists(imgs))
+                    if (keyword == "Title") movie.Title = value;
+                    else if (keyword == "imdbRating") movie.Rating = value;
+                    else if (keyword == "imdbVotes") movie.Votes = value;
+                    else if (keyword == "Genre") movie.Genre = value;
+                    else if (keyword == "Director") movie.Director = value;
+                    else if (keyword == "Plot") movie.Plot = value;
+                    else if (keyword == "Actors") movie.Stars = value;
+                    else if (keyword == "Year") movie.RealaseDate = value;
+                    else if (keyword == "Writer") movie.Writer = value;
+                    else if (keyword == "Poster" && value != "N/A" && value != "")
                     {
-                        Directory.CreateDirectory(imgs);
-                    }
+                        string dir = Directory.GetCurrentDirectory();
+                        string imgs = dir + "/imgs/";
 
-                    string curFile = imgs + tit + ".jpg";
+                        if (!File.Exists(imgs))
+                        {
+                            Directory.CreateDirectory(imgs);
+                        }
 
-                    if (!File.Exists(curFile))
-                    {
+                        string curFile = imgs + tit + ".jpg";
 
-                        WebRequest requestPic = WebRequest.Create(build);
-                        WebResponse responsePic = requestPic.GetResponse();
-                        Image webImage = Image.FromStream(responsePic.GetResponseStream()); // Error
-                        webImage.Save(curFile);
-                        mainGrid["Image", row].Value = webImage;
-                        mainGrid[col, row].Value = webImage;
+                        if (!File.Exists(curFile))
+                        {
+
+                            WebRequest requestPic = WebRequest.Create(value);
+                            WebResponse responsePic = requestPic.GetResponse();
+                            Image webImage = Image.FromStream(responsePic.GetResponseStream()); // Error
+                            webImage.Save(curFile);
+                            movie.Image = webImage;
+
+                        }
+                        else
+                        {
+                            Image webImage = Image.FromFile(curFile);
+                            movie.Image = webImage;
+                        }
+
                     }
                     else
                     {
-                        Image webImage = Image.FromFile(curFile);
-                        mainGrid["Image", row].Value = webImage;
-                        mainGrid[col, row].Value = webImage;
 
+                        string link = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + value + "&s=all";
+                        movie.Url = link;
                     }
 
-                }
-                else
-                {
-
-                    if (col == 11)
-                    {
-
-                        mainGrid[col, row].Value = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + build + "&s=all";
-                    }
-                    else
-                        mainGrid[col, row].Value = build;
-
-
+                value = "";
+                  
 
                 }
+
+                return movie;
+
             }
-
-
-
-
         }
 
     }
-}
+
