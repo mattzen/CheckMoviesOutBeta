@@ -22,6 +22,8 @@ namespace CheckMoviesOut
         private List<Movie> _moviesCollection;
         ListView myListView;
 
+        private List<Movie> _unknownMovies;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +31,7 @@ namespace CheckMoviesOut
             _rowctr = 0;
             _controller = new MoviesController();
             _moviesCollection = new List<Movie>();
+            _unknownMovies = new List<Movie>();
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -237,23 +240,19 @@ namespace CheckMoviesOut
             myListView = new ListView();
             myListView.Dock = DockStyle.Fill;
             myListView.View = View.Tile;
+            myListView.ItemActivate += MyListView_ItemActivate;
 
             // Initialize the tile size.
-            myListView.TileSize = new Size(300, 150);
-
+            myListView.TileSize = new Size(400, 300);
+            myListView.ShowItemToolTips = true; 
             var imageList = new ImageList();
+
+            myListView.Columns.AddRange(new ColumnHeader[]
+                 { new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader()});
+
+
             foreach (var item in _moviesCollection)
             {
-
-
-                // Initialize the item icons.
-                //var myImageList = new ImageList();
-                //using (Icon myIcon = new Icon("book.ico"))
-                //{
-                //    myImageList.Images.Add(myIcon);
-                //}
-                //myImageList.ImageSize = new Size(32, 32);
-                //myListView.LargeImageList = myImageList;
 
                 var movie = item;
                 ListViewItem listViewItem;
@@ -261,42 +260,88 @@ namespace CheckMoviesOut
                 {
                     
                     imageList.Images.Add(movie.FileName, movie.Image);
-                    imageList.ImageSize = new Size(60, 80);
+                    imageList.ImageSize = new Size(80, 100);
+                    imageList.ImageSize = new Size(80, 100);
+                    string[] arr = new string[8];
+                    arr[0] = movie.Title;
+                    arr[1] = movie.Rating;
+                    arr[2] = movie.Plot;
+                    arr[3] = movie.RealaseDate;
+                    arr[4] = movie.Genre;
+                    arr[5] = movie.Stars;
+                    arr[6] = movie.Votes;
+                    arr[7] = movie.Url;
+                    ListViewItem itemek = new ListViewItem(arr, movie.FileName);
+                    myListView.Items.Add(itemek);
+                }
+                else
+                {
 
                 }
 
-                string[] arr = new string[8];
-                arr[0] = movie.Title;
-                arr[1] = movie.Rating;
-                arr[2] = movie.Plot;
-                arr[3] = movie.RealaseDate;
-                arr[4] = movie.Genre;
-                arr[5] = movie.Stars;
-                arr[6] = movie.Votes;
-                arr[7] = movie.Url;
-                
 
-                ListViewItem itemek = new ListViewItem(arr, movie.FileName);
-                
-                //ListViewItem itemek = new ListViewItem(movie.Title);
-
-                myListView.Items.Add(itemek);
-                // Add column headers so the subitems will appear.
-                myListView.Columns.AddRange(new ColumnHeader[]
-                    { new ColumnHeader(), new ColumnHeader(), new ColumnHeader()});
-
-                //// Create items and add them to myListView.
-                //ListViewItem movieItem = new ListViewItem(new string[]
-                //{
-                // movie.Title,
-                // movie.Rating,
-                // movie.Votes});
-
-                //myListView.Items.Add(movieItem);
                
             }
             myListView.LargeImageList = imageList;
             this.Controls.Add(myListView);
+        }
+
+        private void MyListView_ItemActivate(object sender, EventArgs e)
+        {
+            Form f = new Form();
+
+            PictureBox px = new PictureBox();
+            Label Title = new Label();
+            Label Rating = new Label();
+            Label Plot = new Label();
+            Label RealaseDate = new Label();
+            Label Genre = new Label();
+            Label Stars = new Label();
+            Label Votes = new Label();
+            Label Url = new Label();
+
+
+            ListViewItem item = ((ListView)sender).SelectedItems[0];    
+            Image img = item.ImageList.Images[item.ImageKey];
+
+
+            Title.Text = item.SubItems[0].Text.ToString();
+            Rating.Text = item.SubItems[1].Text.ToString();
+            Plot.Text = item.SubItems[2].Text.ToString();
+            RealaseDate.Text = item.SubItems[3].Text.ToString();
+
+            Genre.Text = item.SubItems[4].Text.ToString();
+            Stars.Text = item.SubItems[5].Text.ToString();
+            Votes.Text = item.SubItems[6].Text.ToString();
+            Url.Text = item.SubItems[7].Text.ToString();
+
+
+
+
+           // Title.Size = new Size(300,20);
+            Rating.Size = new Size(300, 20);
+            Plot.Size = new Size(300, 20);
+            Genre.Size = new Size(300, 20);
+            RealaseDate.Size = new Size(300, 20);
+            Stars.Size = new Size(300, 20);
+            Votes.Size = new Size(300, 20);
+            Url.Size = new Size(300, 20);
+            px.Size = new Size(100, 100);
+
+
+            //px.Image = img;
+           // f.Controls.Add(px);
+            f.Controls.Add(Title);
+            f.Controls.Add(Rating);
+            f.Controls.Add(Plot);
+            f.Controls.Add(RealaseDate);
+            f.Controls.Add(Genre);
+            f.Controls.Add(Stars);
+            f.Controls.Add(Votes);
+            f.Controls.Add(Url);
+
+            f.Show();
+
         }
 
         private void switchToGridViewToolStripMenuItem_Click(object sender, EventArgs e)
