@@ -170,7 +170,6 @@ namespace CheckMoviesOut
             }
         }
 
-
         private async void loadFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -278,7 +277,7 @@ namespace CheckMoviesOut
                     arr[4] = movie.Genre;
                     arr[5] = movie.Stars;
                     arr[6] = movie.Votes;
-                    arr[7] = movie.Url;
+                    arr[7] = movie.Director;
                     ListViewItem itemek = new ListViewItem(arr, movie.FileName);
                     myListView.Items.Add(itemek);
                 }
@@ -299,8 +298,10 @@ namespace CheckMoviesOut
             Form f = new Form();
 
             PictureBox px = new PictureBox();
+
             Label Title = new Label();
             Label Rating = new Label();
+            Label Director = new Label();
             Label Plot = new Label();
             Label RealaseDate = new Label();
             Label Genre = new Label();
@@ -317,43 +318,60 @@ namespace CheckMoviesOut
             Rating.Text = item.SubItems[1].Text.ToString();
             Plot.Text = item.SubItems[2].Text.ToString();
             RealaseDate.Text = item.SubItems[3].Text.ToString();
-
+           
             Genre.Text = item.SubItems[4].Text.ToString();
             Stars.Text = item.SubItems[5].Text.ToString();
             Votes.Text = item.SubItems[6].Text.ToString();
-            Url.Text = item.SubItems[7].Text.ToString();
-
-
+            Director.Text = item.SubItems[7].Text.ToString();
 
 
             Title.AutoSize = true;
+            Title.Location = new Point(5, 100);
+
             Rating.AutoSize = true;
+            Rating.Location = new Point(5, 120);
+          
+            Stars.Location = new Point(5, 140);
+            Stars.Width = 600;
+            Director.Location = new Point(5, 160);
+            Director.Width = 600;
 
             Plot.Font = new Font("arial", 16);
-            Plot.AutoSize = true;
+            Plot.Width = 600;
+            Plot.Height = 200;
+            Plot.Location = new Point(5, 180);
 
             Genre.AutoSize = true;
+            Genre.Location = new Point(5, 380);
 
             RealaseDate.AutoSize = true;
+            RealaseDate.Location = new Point(5, 400);
 
             Votes.AutoSize = true;
+            Votes.Location = new Point(5, 420);
 
-            Url.AutoSize = true;
-
-            px.AutoSize = true;
 
 
 
             px.Image = img;
+
+            px.Location = new Point(5, 0);
+
             f.Controls.Add(px);
-            f.Controls.Add(Plot);
+
+            f.Controls.Add(Title);
             f.Controls.Add(Rating);
             f.Controls.Add(Plot);
+
+
+
+
             f.Controls.Add(RealaseDate);
             f.Controls.Add(Genre);
             f.Controls.Add(Stars);
-            f.Controls.Add(Votes);
-            f.Controls.Add(Url);
+
+            //f.Controls.Add(Votes);
+            //f.Controls.Add(Url);
 
             f.Show();
             f.PerformLayout();
