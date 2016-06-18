@@ -258,7 +258,7 @@ namespace CheckMoviesOut
                  { new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader()});
 
 
-            foreach (var item in _moviesCollection)
+            foreach (var item in _moviesCollection.OrderByDescending(x=>x.Rating))
             {
 
                 var movie = item;
@@ -267,7 +267,6 @@ namespace CheckMoviesOut
                 {
                     
                     imageList.Images.Add(movie.FileName, movie.Image);
-                    imageList.ImageSize = new Size(80, 100);
                     imageList.ImageSize = new Size(80, 100);
                     string[] arr = new string[8];
                     arr[0] = movie.Title;
@@ -309,7 +308,7 @@ namespace CheckMoviesOut
             Label Votes = new Label();
             Label Url = new Label();
 
-            f.Size = new Size(700, 700);
+            f.Size = new Size(800, 500);
             ListViewItem item = ((ListView)sender).SelectedItems[0];    
             Image img = item.ImageList.Images[item.ImageKey];
 
@@ -326,36 +325,36 @@ namespace CheckMoviesOut
 
 
             Title.AutoSize = true;
-            Title.Location = new Point(5, 100);
+            Title.Location = new Point(200, 100);
 
             Rating.AutoSize = true;
-            Rating.Location = new Point(5, 120);
+            Rating.Location = new Point(200, 120);
           
-            Stars.Location = new Point(5, 140);
+            Stars.Location = new Point(200, 140);
             Stars.Width = 600;
-            Director.Location = new Point(5, 160);
+            Director.Location = new Point(200, 160);
             Director.Width = 600;
 
             Plot.Font = new Font("arial", 16);
             Plot.Width = 600;
             Plot.Height = 200;
-            Plot.Location = new Point(5, 180);
+            Plot.Location = new Point(200, 180);
 
             Genre.AutoSize = true;
-            Genre.Location = new Point(5, 380);
+            Genre.Location = new Point(200, 380);
 
             RealaseDate.AutoSize = true;
-            RealaseDate.Location = new Point(5, 400);
+            RealaseDate.Location = new Point(200, 400);
 
             Votes.AutoSize = true;
-            Votes.Location = new Point(5, 420);
+            Votes.Location = new Point(200, 420);
 
+            px.Location = new Point(0, 0);
+            px.SetBounds(0, 0, 200, 400);
 
-
-
+            //img.Size = new Size(200, 500);
+            px.SizeMode = PictureBoxSizeMode.StretchImage;
             px.Image = img;
-
-            px.Location = new Point(5, 0);
 
             f.Controls.Add(px);
 
