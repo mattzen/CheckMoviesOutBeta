@@ -80,6 +80,14 @@ namespace CheckMoviesOut
 
         }
 
+        public void traverse(string path)
+        {
+            if (Directory.Exists(path))
+            {
+
+            }
+        }
+
         public async Task generate_rows(string path)
         {
 
@@ -300,7 +308,7 @@ namespace CheckMoviesOut
             Label Votes = new Label();
             Label Url = new Label();
 
-
+            f.Size = new Size(700, 700);
             ListViewItem item = ((ListView)sender).SelectedItems[0];    
             Image img = item.ImageList.Images[item.ImageKey];
 
@@ -318,20 +326,27 @@ namespace CheckMoviesOut
 
 
 
-           // Title.Size = new Size(300,20);
-            Rating.Size = new Size(300, 20);
-            Plot.Size = new Size(300, 20);
-            Genre.Size = new Size(300, 20);
-            RealaseDate.Size = new Size(300, 20);
-            Stars.Size = new Size(300, 20);
-            Votes.Size = new Size(300, 20);
-            Url.Size = new Size(300, 20);
-            px.Size = new Size(100, 100);
+            Title.AutoSize = true;
+            Rating.AutoSize = true;
+
+            Plot.Font = new Font("arial", 16);
+            Plot.AutoSize = true;
+
+            Genre.AutoSize = true;
+
+            RealaseDate.AutoSize = true;
+
+            Votes.AutoSize = true;
+
+            Url.AutoSize = true;
+
+            px.AutoSize = true;
 
 
-            //px.Image = img;
-           // f.Controls.Add(px);
-            f.Controls.Add(Title);
+
+            px.Image = img;
+            f.Controls.Add(px);
+            f.Controls.Add(Plot);
             f.Controls.Add(Rating);
             f.Controls.Add(Plot);
             f.Controls.Add(RealaseDate);
@@ -341,7 +356,7 @@ namespace CheckMoviesOut
             f.Controls.Add(Url);
 
             f.Show();
-
+            f.PerformLayout();
         }
 
         private void switchToGridViewToolStripMenuItem_Click(object sender, EventArgs e)

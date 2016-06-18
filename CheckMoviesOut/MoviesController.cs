@@ -8,11 +8,24 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CheckMoviesOut
 {
     public class MoviesController
     {
+        List<string> keywords = new List<string>() {
+                "Title",
+                "imdbRating",
+                "imdbVotes",
+                "Genre",
+                "Director",
+                "Plot",
+                "Actors",
+                "Year",
+                "Writer",
+                "Poster" };
 
         public MoviesController()
         {
@@ -98,7 +111,7 @@ namespace CheckMoviesOut
 
             Movie movie = new Movie();
        
-            movie = extract_cont( ret, fullname);
+            movie = extract_cont(ret, title);
 
             return movie;
 
@@ -109,18 +122,7 @@ namespace CheckMoviesOut
             Movie movie = new Movie();
             movie.FileName = tit;
 
-            List<string> keywords = new List<string>() { 
-                "Title",
-                "imdbRating",
-                "imdbVotes",
-                "Genre",
-                "Director",
-                "Plot",
-                "Actors",
-                "Year",
-                "Writer",
-                "Poster" };
-
+           
             string value = "";
             foreach (var keyword in keywords)
             {
@@ -151,15 +153,15 @@ namespace CheckMoviesOut
                     }
                 }
 
-                    if (keyword == "Title") movie.Title = value;
-                    else if (keyword == "imdbRating") movie.Rating = value;
-                    else if (keyword == "imdbVotes") movie.Votes = value;
-                    else if (keyword == "Genre") movie.Genre = value;
-                    else if (keyword == "Director") movie.Director = value;
-                    else if (keyword == "Plot") movie.Plot = value;
-                    else if (keyword == "Actors") movie.Stars = value;
-                    else if (keyword == "Year") movie.RealaseDate = value;
-                    else if (keyword == "Writer") movie.Writer = value;
+                    if (keyword == "Title") movie.MovieDict[Movie.DicrtionaryKeys.TitleName] = value;
+                    else if (keyword == "imdbRating") movie.MovieDict[Movie.DicrtionaryKeys.RatingName] = value;
+                    else if (keyword == "imdbVotes") movie.MovieDict[Movie.DicrtionaryKeys.VotesName] = value;
+                    else if (keyword == "Genre") movie.MovieDict[Movie.DicrtionaryKeys.GenreName] = value;
+                    else if (keyword == "Director") movie.MovieDict[Movie.DicrtionaryKeys.DirectorName] = value;
+                    else if (keyword == "Plot") movie.MovieDict[Movie.DicrtionaryKeys.PlotName] = value;
+                    else if (keyword == "Actors") movie.MovieDict[Movie.DicrtionaryKeys.ActorsName] = value;
+                    else if (keyword == "Year") movie.MovieDict[Movie.DicrtionaryKeys.YearName] = value;
+                    else if (keyword == "Writer") movie.MovieDict[Movie.DicrtionaryKeys.WriterName] = value;
                     else if (keyword == "Poster" && value != "N/A" && value != "")
                     {
                         string dir = Directory.GetCurrentDirectory();
@@ -204,6 +206,34 @@ namespace CheckMoviesOut
                 return movie;
 
             }
+
+        private Movie extract_cont(string json)
+        {
+            Movie m = new Movie();
+
+            m.MovieDict = new Dictionary<string, string>();
+
+            JObject jObj = JObject.Parse(json);
+
+            foreach (var item in jObj)
+            {
+                m.MovieDict.Add(item.Key, item.Value.ToString());
+            }
+
+           // m.Title = m.MovieDict[Movie.TitleName];
+           // m.Stars = m.MovieDict[Movie.ActorsName];
+           // m.Director = m.MovieDict[Movie.DirectorName];
+           // m.Genre = m.MovieDict[Movie.GenreName];
+           // m.Plot = m.MovieDict[Movie.PlotName];
+           //// m.Image = m.MovieDict[Movie.PosterName];
+           // m.Rating = m.MovieDict[Movie.RatingName];
+           // m.Votes = m.MovieDict[Movie.VotesName];
+           // m.RealaseDate = m.MovieDict[Movie.YearName];
+           // m.Writer = m.MovieDict[Movie.WriterName];
+
+            return m;
+        }
+
         }
 
     }
