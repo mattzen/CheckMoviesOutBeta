@@ -15,10 +15,10 @@ namespace CheckMoviesOut
 {
     public class MoviesController
     {
-        public string filter_valid_title(string title)
+        public string filter_valid_title(string filename)
         {
 
-            string tit = title;
+            string tit = filename;
 
             Regex expression2 = new Regex(@"[A-Z]*[a-z]*");
             var results2 = expression2.Matches(tit.ToString());
@@ -65,7 +65,7 @@ namespace CheckMoviesOut
 
         }
 
-        public async Task<Movie> down_movie_desc(string title, string fullname)
+        public async Task<Movie> down_movie_desc(string title, string filename)
         {
             string req = "http://www.omdbapi.com/?t=" + title;
 
@@ -94,7 +94,7 @@ namespace CheckMoviesOut
 
             Movie movie = new Movie();
        
-            movie = extract_cont(ret, fullname);
+            movie = extract_cont(ret, filename);
 
             return movie;
 

@@ -13,7 +13,6 @@ namespace CheckMoviesOut
     {
         public Dictionary<string, string> MovieTable;
 
-
         public Movie()
         {
             MovieTable = new Dictionary<string, string>();
@@ -34,13 +33,8 @@ namespace CheckMoviesOut
         }
 
         public int Id { get; set; }
-
-        public string Title { get { return MovieTable.ContainsKey(DictionaryKeys.TitleKey) 
-                                                    ? MovieTable[DictionaryKeys.TitleKey]:string.Empty; } set { } }
-
-        public Image Image { get { return getImage(MovieTable.ContainsKey(DictionaryKeys.ImageKey) 
-                                                    ? MovieTable[DictionaryKeys.ImageKey]:string.Empty, Title); } set { } }
-
+        public string Title { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.TitleKey, string.Empty); } set { } }
+        public Image Image { get { return getImage(Infra.GetValueOrDefault(MovieTable, DictionaryKeys.ImageKey, string.Empty), Title); } set { } }
         public string ImageUrl { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.ImageKey, string.Empty); } set { } }
         public string Rating { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.RatingKey, string.Empty); } set { } }
         public string Votes { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.VotesKey, string.Empty); } set { } }
@@ -87,9 +81,5 @@ namespace CheckMoviesOut
             return img;
         }
 
-
-
-
     }
-
 }
