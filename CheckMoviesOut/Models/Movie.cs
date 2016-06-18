@@ -60,7 +60,7 @@ namespace CheckMoviesOut
                 Directory.CreateDirectory(imgs);
             }
 
-            string curFile = imgs + tit + ".jpg";
+            string curFile = imgs + tit.Replace(":","").Replace("*","") + ".jpg";
 
             if (!File.Exists(curFile))
             {
