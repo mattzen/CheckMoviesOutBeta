@@ -116,10 +116,10 @@ namespace CheckMoviesOut
                     if (fullname.Length > 3)
                     {                              
                         //string last4 = fullname.Substring(fullname.Length - 4).ToLower();
-                        movieItem = _controller.filter_valid_title(fullname);
+                        movieItem = _controller.GetTitleAndYear(fullname);
                         if (string.IsNullOrEmpty(movieItem?.Item1)) continue;
-                        movie = await _controller.down_movie_desc(movieItem.Item1, fullname, movieItem.Item2);
-                        
+                        movie = await _controller.GetMovie(movieItem.Item1, fullname, movieItem.Item2);
+                        movie.Image = await _controller.GetImage(movie.ImageUrl, movie.Title);
                         fillNewGridRow(movie);
                         _moviesCollection.Add(movie);
                         _rowctr++;
@@ -131,9 +131,10 @@ namespace CheckMoviesOut
 
                 int ct = path.LastIndexOf('\\');
                 fullname = path.Substring(ct + 1);
-                movieItem = _controller.filter_valid_title(fullname);
+                movieItem = _controller.GetTitleAndYear(fullname);
                 if (string.IsNullOrEmpty(movieItem?.Item1)) return ;          
-                movie = await _controller.down_movie_desc(movieItem.Item1, fullname, movieItem.Item2);
+                movie = await _controller.GetMovie(movieItem.Item1, fullname, movieItem.Item2);
+                movie.Image = await _controller.GetImage(movie.ImageUrl, movie.Title);
                 fillNewGridRow(movie);
                 _moviesCollection.Add(movie);
                 _rowctr++;
@@ -227,19 +228,8 @@ namespace CheckMoviesOut
             }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form f = new Form();
-
-            Label l = new Label();
-            l.Text = "Hello world";
-
-            f.Controls.Add(l);
 
 
-            f.Show();
-            
-        }
 
         private void switchToViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -299,6 +289,8 @@ namespace CheckMoviesOut
         private void MyListView_ItemActivate(object sender, EventArgs e)
         {
             Form f = new Form();
+
+            f.FormClosing += F_FormClosing;
 
             PictureBox px = new PictureBox();
 
@@ -378,6 +370,11 @@ namespace CheckMoviesOut
 
             f.Show();
             f.PerformLayout();
+        }
+
+        private void F_FormClosing(object sender, FormClosingEventArgs e)
+        {
+          
         }
 
         private void switchToGridViewToolStripMenuItem_Click(object sender, EventArgs e)

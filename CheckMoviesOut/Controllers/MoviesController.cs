@@ -15,7 +15,8 @@ namespace CheckMoviesOut
 {
     public class MoviesController
     {
-        public Tuple<string, string> filter_valid_title(string filename)
+     
+        public Tuple<string, string> GetTitleAndYear(string filename)
         {
 
             string tit = filename;
@@ -111,7 +112,7 @@ namespace CheckMoviesOut
             return build;
         }
 
-        public async Task<Movie> down_movie_desc(string title, string filename, string year)
+        public async Task<Movie> GetMovie(string title, string filename, string year)
         {          
 
             string req = "http://www.omdbapi.com/?t=" + title;
@@ -146,14 +147,13 @@ namespace CheckMoviesOut
 
             
        
-            movie = extract_cont(ret, filename, title,year);
-
-            movie.Image = await getImage(movie.ImageUrl, movie.Title);
+            movie = ExtractJson(ret, filename, title,year);
 
             return movie;
 
         }
-        public async Task<Image> getImage(string url, string tit)
+
+        public async Task<Image> GetImage(string url, string tit)
         {
             if (string.IsNullOrEmpty(url) || url == "N/A") return null;
 
@@ -190,7 +190,8 @@ namespace CheckMoviesOut
 
             return img;
         }
-        private Movie extract_cont(string json, string filename, string title, string year)
+
+        private Movie ExtractJson(string json, string filename, string title, string year)
         {
             Movie m = new Movie();
             m.FileName = filename;

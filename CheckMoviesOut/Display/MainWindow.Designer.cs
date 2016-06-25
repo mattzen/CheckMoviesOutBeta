@@ -132,9 +132,7 @@ namespace CheckMoviesOut
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
+            this.aboutToolStripMenuItem.Text = "About";            // 
             // MainWindow
             // 
             this.ClientSize = new System.Drawing.Size(883, 478);
