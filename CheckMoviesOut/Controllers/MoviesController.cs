@@ -15,15 +15,29 @@ namespace CheckMoviesOut
 {
     public class MoviesController
     {
-        public string filter_valid_title(string filename)
+        public Tuple<string, string> filter_valid_title(string filename)
         {
 
             string tit = filename;
 
-            Regex expression2 = new Regex(@"[A-Z]*[a-z]*");
-            var results2 = expression2.Matches(tit.ToString());
+            string[] allowedFormats = { "avi", "mp4", "mp3", "wmv", "m4v", "mpg", "mpeg", "flv", "rmvb", "mov", "mkv" };
+            if (tit.Length > 3)
+            {
+                if(tit[tit.Length-4] == '.')
+                {
+                    if (!allowedFormats.Contains(tit.Substring(tit.Length - 3,3).ToLower()) || tit.Substring(0,tit.Length-4).ToLower() == "sample") return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
 
-            string build = "";
+
+            Regex expression2 = new Regex(@"[a-z]*");
+            var results2 = expression2.Matches(tit.ToLower().ToString());
+
+            string Title = "";
 
             int ctr = 1;
             foreach (Match match2 in results2)
@@ -50,26 +64,64 @@ namespace CheckMoviesOut
                         )
                     {
 
-                        build += match2.ToString() + "";
+                        Title += match2.ToString() + "";
 
                         if (ctr % 2 == 0)
                         {
-                            build += "%20";
+                            Title += " ";
                         }
                     }
                 }
                 ctr++;
             }
 
-            return build;
+            Title = Title.Replace("  ", " ");
+
+            var Year = GetMovieYear(filename);
+
+
+            //
+            return new Tuple<string, string>(Title, Year);
 
         }
 
-        public async Task<Movie> down_movie_desc(string title, string filename)
+        private string GetMovieYear(string filename)
         {
+            Regex expression2 = new Regex(@"\d{4}");
+            var results2 = expression2.Matches(filename.ToLower().ToString());
+
+            if (results2.Count == 0) return string.Empty;
+
+            string build = "";
+
+            int ctr = 1;
+            foreach (Match match2 in results2)
+            {
+                build = match2.Value.ToString();
+            }
+
+            
+
+            var year = int.Parse(build);
+
+            if (year > 1950 && year < 2020)
+            { }
+            else { build = string.Empty; }
+
+            return build;
+        }
+
+        public async Task<Movie> down_movie_desc(string title, string filename, string year)
+        {          
+
             string req = "http://www.omdbapi.com/?t=" + title;
 
+            if (!string.IsNullOrEmpty(year)) req += "&y=" + year;
+
+
             string ret = "";
+
+            Movie movie = new Movie();
 
             var request = await WebRequest.Create(req).GetResponseAsync();
             try
@@ -87,20 +139,58 @@ namespace CheckMoviesOut
                 {
                     StreamReader reader = new StreamReader(responseStream, Encoding.GetEncoding("utf-8"));
                     String errorText = reader.ReadToEnd();
-
+                    movie.Plot = errorText;
                 }
                 throw ex;
             }
 
-            Movie movie = new Movie();
+            
        
-            movie = extract_cont(ret, filename);
+            movie = extract_cont(ret, filename, title,year);
+
+            movie.Image = await getImage(movie.ImageUrl, movie.Title);
 
             return movie;
 
         }
-    
-        private Movie extract_cont(string json, string filename)
+        public async Task<Image> getImage(string url, string tit)
+        {
+            if (string.IsNullOrEmpty(url) || url == "N/A") return null;
+
+            Image img;
+            string dir = Directory.GetCurrentDirectory();
+            string imgs = dir + "/imgs/";
+
+            if (!File.Exists(imgs))
+            {
+                Directory.CreateDirectory(imgs);
+            }
+
+            string curFile = imgs + tit.Replace(":", "").Replace("*", "") + ".jpg";
+
+            if (!File.Exists(curFile))
+            {
+
+                WebRequest requestPic = WebRequest.Create(url);
+                //WebResponse responsePic = requestPic.GetResponse();
+                //Image webImage = Image.FromStream(responsePic.GetResponseStream()); // Error
+
+                var response = await requestPic.GetResponseAsync();
+                Image webImage = Image.FromStream(response.GetResponseStream());
+
+                webImage.Save(curFile);
+                img = webImage;
+
+            }
+            else
+            {
+                Image webImage = Image.FromFile(curFile);
+                img = webImage;
+            }
+
+            return img;
+        }
+        private Movie extract_cont(string json, string filename, string title, string year)
         {
             Movie m = new Movie();
             m.FileName = filename;
@@ -111,6 +201,16 @@ namespace CheckMoviesOut
             {
                 m.MovieTable.Add(item.Key, item.Value.ToString());
             }
+
+            m.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + m.Title + "&s=all&y="+year;
+
+            if (string.IsNullOrEmpty(m.Title))
+            {
+                m.MovieTable["Title"] = title;
+                m.MovieTable["Year"] = year;
+                m.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all&y="+year;
+            }
+
 
             return m;
         }

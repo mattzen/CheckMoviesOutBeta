@@ -34,7 +34,7 @@ namespace CheckMoviesOut
 
         public int Id { get; set; }
         public string Title { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.TitleKey, string.Empty); } set { } }
-        public Image Image { get { return getImage(Infra.GetValueOrDefault(MovieTable, DictionaryKeys.ImageKey, string.Empty), Title); } set { } }
+        public Image Image { get; set; }
         public string ImageUrl { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.ImageKey, string.Empty); } set { } }
         public string Rating { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.RatingKey, string.Empty); } set { } }
         public string Votes { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.VotesKey, string.Empty); } set { } }
@@ -47,39 +47,7 @@ namespace CheckMoviesOut
         public string FileName { get; set; }
         public string Url { get; set; }
 
-        public Image getImage(string url, string tit)
-        {
-            if (string.IsNullOrEmpty(url) || url == "N/A") return null;
-
-            Image img;
-            string dir = Directory.GetCurrentDirectory();
-            string imgs = dir + "/imgs/";
-
-            if (!File.Exists(imgs))
-            {
-                Directory.CreateDirectory(imgs);
-            }
-
-            string curFile = imgs + tit.Replace(":","").Replace("*","") + ".jpg";
-
-            if (!File.Exists(curFile))
-            {
-
-                WebRequest requestPic = WebRequest.Create(url);
-                WebResponse responsePic = requestPic.GetResponse();
-                Image webImage = Image.FromStream(responsePic.GetResponseStream()); // Error
-                webImage.Save(curFile);
-                img = webImage;
-
-            }
-            else
-            {
-                Image webImage = Image.FromFile(curFile);
-                img  = webImage;
-            }
-
-            return img;
-        }
+      
 
     }
 }

@@ -93,10 +93,10 @@ namespace CheckMoviesOut
 
             List<string> directories = new List<string>();
             List<string> files = new List<string>();
-            string[] allowedFormats = { "avi", "mp4", "mp3", "wmv", "m4v", "mpg", "mpeg", "flv", "rmvb", "mov", "mkv" };
+           
             Movie movie = new Movie();
 
-            string tit = "";
+            Tuple<string, string> movieItem;
             string fullname;
             int l = path.Length;
             //if folder passed
@@ -116,8 +116,10 @@ namespace CheckMoviesOut
                     if (fullname.Length > 3)
                     {                              
                         //string last4 = fullname.Substring(fullname.Length - 4).ToLower();
-                        tit = _controller.filter_valid_title(fullname);
-                        movie = await _controller.down_movie_desc(tit, fullname);
+                        movieItem = _controller.filter_valid_title(fullname);
+                        if (string.IsNullOrEmpty(movieItem?.Item1)) continue;
+                        movie = await _controller.down_movie_desc(movieItem.Item1, fullname, movieItem.Item2);
+                        
                         fillNewGridRow(movie);
                         _moviesCollection.Add(movie);
                         _rowctr++;
@@ -129,8 +131,9 @@ namespace CheckMoviesOut
 
                 int ct = path.LastIndexOf('\\');
                 fullname = path.Substring(ct + 1);
-                tit = _controller.filter_valid_title(fullname);
-                movie = await _controller.down_movie_desc(tit, fullname);
+                movieItem = _controller.filter_valid_title(fullname);
+                if (string.IsNullOrEmpty(movieItem?.Item1)) return ;          
+                movie = await _controller.down_movie_desc(movieItem.Item1, fullname, movieItem.Item2);
                 fillNewGridRow(movie);
                 _moviesCollection.Add(movie);
                 _rowctr++;
@@ -155,7 +158,7 @@ namespace CheckMoviesOut
             mainGrid[10, _rowctr].Value = movie?.FileName;
 
             DataGridViewCell linkCell = new DataGridViewLinkCell();
-            linkCell.Value = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + movie.Title + "&s=all";
+            linkCell.Value = movie.Url;
             mainGrid[11, _rowctr] = linkCell;
 
             mainGrid.Rows[_rowctr].Height = 100;
@@ -267,7 +270,8 @@ namespace CheckMoviesOut
                 {
                     
                     imageList.Images.Add(movie.FileName, movie.Image);
-                    imageList.ImageSize = new Size(80, 100);
+                    imageList.ImageSize = new Size(150, 250);
+                    //imageList.ImageSize = new Size(80, 100);
                     string[] arr = new string[8];
                     arr[0] = movie.Title;
                     arr[1] = movie.Rating;
