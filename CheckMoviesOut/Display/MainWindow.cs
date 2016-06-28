@@ -21,8 +21,8 @@ namespace CheckMoviesOut
         private int _rowctr;
         private List<Movie> _moviesCollection;
         ListView myListView;
-
         private List<Movie> _unknownMovies;
+        List<string> _files;
 
         public MainWindow()
         {
@@ -32,6 +32,8 @@ namespace CheckMoviesOut
             _controller = new MoviesController();
             _moviesCollection = new List<Movie>();
             _unknownMovies = new List<Movie>();
+
+
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -84,61 +86,38 @@ namespace CheckMoviesOut
         {
             if (Directory.Exists(path))
             {
+                var directories = Directory.GetDirectories(path).ToList();
+                var files = Directory.GetFiles(path).ToList();
+                _files.AddRange(files);
 
+                foreach (var item in directories)
+                {
+                    traverse(item);
+                }
+            }
+            else
+            {
+                _files.Add(path);                
             }
         }
 
+
         public async Task generate_rows(string path)
         {
+            _files = new List<string>();
+            traverse(path);
+            var files = _files;
 
-            List<string> directories = new List<string>();
-            List<string> files = new List<string>();
-           
-            Movie movie = new Movie();
-
-            Tuple<string, string> movieItem;
-            string fullname;
-            int l = path.Length;
-            //if folder passed
-            if (Directory.Exists(path))
+            foreach (var file in files)
             {
-
-                directories = Directory.GetDirectories(path).ToList();
-                files = Directory.GetFiles(path).ToList();
-                foreach (var item in files)
-                {
-                    directories.Add(item);
-                }
-
-                foreach (var file in directories)
-                {
-                    fullname = file.Substring(l + 1);
-                    if (fullname.Length > 3)
-                    {                              
-                        //string last4 = fullname.Substring(fullname.Length - 4).ToLower();
-                        movieItem = _controller.GetTitleAndYear(fullname);
-                        if (string.IsNullOrEmpty(movieItem?.Item1)) continue;
-                        movie = await _controller.GetMovie(movieItem.Item1, fullname, movieItem.Item2);
-                        movie.Image = await _controller.GetImage(movie.ImageUrl, movie.Title);
-                        fillNewGridRow(movie);
-                        _moviesCollection.Add(movie);
-                        _rowctr++;
-                    }
-                }
-            }
-            else //a file
-            {
-
-                int ct = path.LastIndexOf('\\');
-                fullname = path.Substring(ct + 1);
-                movieItem = _controller.GetTitleAndYear(fullname);
-                if (string.IsNullOrEmpty(movieItem?.Item1)) return ;          
-                movie = await _controller.GetMovie(movieItem.Item1, fullname, movieItem.Item2);
+                var fileName = Path.GetFileName(file);
+                var movieItem = _controller.GetTitleAndYear(fileName);
+                if (string.IsNullOrEmpty(movieItem?.Item1)) continue;
+                var movie = await _controller.GetMovie(movieItem.Item1, fileName, movieItem.Item2);
                 movie.Image = await _controller.GetImage(movie.ImageUrl, movie.Title);
                 fillNewGridRow(movie);
                 _moviesCollection.Add(movie);
                 _rowctr++;
-
             }
         }
 
@@ -233,57 +212,7 @@ namespace CheckMoviesOut
 
         private void switchToViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainGrid.Visible = false;
-            welcomeTextBox.Visible = false;
 
-
-            myListView = new ListView();
-            myListView.Dock = DockStyle.Fill;
-            myListView.View = View.Tile;
-            myListView.ItemActivate += MyListView_ItemActivate;
-
-            // Initialize the tile size.
-            myListView.TileSize = new Size(400, 300);
-            myListView.ShowItemToolTips = true; 
-            var imageList = new ImageList();
-
-            myListView.Columns.AddRange(new ColumnHeader[]
-                 { new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader()});
-
-
-            foreach (var item in _moviesCollection.OrderByDescending(x=>x.Rating))
-            {
-
-                var movie = item;
-                ListViewItem listViewItem;
-                if (movie.Image != null)
-                {
-                    
-                    imageList.Images.Add(movie.FileName, movie.Image);
-                    imageList.ImageSize = new Size(150, 250);
-                    //imageList.ImageSize = new Size(80, 100);
-                    string[] arr = new string[8];
-                    arr[0] = movie.Title;
-                    arr[1] = movie.Rating;
-                    arr[2] = movie.Plot;
-                    arr[3] = movie.RealaseDate;
-                    arr[4] = movie.Genre;
-                    arr[5] = movie.Stars;
-                    arr[6] = movie.Votes;
-                    arr[7] = movie.Director;
-                    ListViewItem itemek = new ListViewItem(arr, movie.FileName);
-                    myListView.Items.Add(itemek);
-                }
-                else
-                {
-
-                }
-
-
-               
-            }
-            myListView.LargeImageList = imageList;
-            this.Controls.Add(myListView);
         }
 
         private void MyListView_ItemActivate(object sender, EventArgs e)
@@ -382,6 +311,75 @@ namespace CheckMoviesOut
             myListView.Visible = false;
 
             mainGrid.Visible = true;
+        }
+
+        private void tILESToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainGrid.Visible = false;
+            welcomeTextBox.Visible = false;
+
+
+            myListView = new ListView();
+            myListView.Dock = DockStyle.Fill;
+            myListView.View = View.Tile;
+            myListView.ItemActivate += MyListView_ItemActivate;
+
+            // Initialize the tile size.
+            myListView.TileSize = new Size(400, 300);
+            myListView.ShowItemToolTips = true;
+            var imageList = new ImageList();
+
+            myListView.Columns.AddRange(new ColumnHeader[]
+                 { new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader(), new ColumnHeader()});
+
+
+            foreach (var item in _moviesCollection.OrderByDescending(x => x.Rating))
+            {
+
+                var movie = item;
+                ListViewItem listViewItem;
+                if (movie.Image != null)
+                {
+
+                    imageList.Images.Add(movie.FileName, movie.Image);
+                    imageList.ImageSize = new Size(150, 250);
+                    string[] arr = new string[10];
+                    arr[0] = movie.Title;
+                    arr[1] = movie.Rating;
+                    arr[2] = movie.Plot;
+                    arr[3] = movie.RealaseDate;
+                    arr[4] = movie.Genre;
+                    arr[5] = movie.Stars;
+                    arr[6] = movie.Votes;
+                    arr[7] = movie.Director;
+                    arr[8] = movie.Url;
+                    arr[9] = movie.Writer;
+                    ListViewItem itemek = new ListViewItem(arr, movie.FileName);
+                    myListView.Items.Add(itemek);
+                }
+                else
+                {
+
+                }
+
+
+
+            }
+            myListView.LargeImageList = imageList;
+            this.Controls.Add(myListView);
+        }
+
+        private void gRIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (myListView==null || myListView.Visible == false) return;
+            myListView.Visible = false;
+
+            mainGrid.Visible = true;
+        }
+
+        private void loadFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

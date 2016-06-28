@@ -26,7 +26,8 @@ namespace CheckMoviesOut
             {
                 if(tit[tit.Length-4] == '.')
                 {
-                    if (!allowedFormats.Contains(tit.Substring(tit.Length - 3,3).ToLower()) || tit.Substring(0,tit.Length-4).ToLower() == "sample") return null;
+                    if (!allowedFormats.Contains(tit.Substring(tit.Length - 3,3).ToLower()) || tit.Substring(0,tit.Length-4).ToLower() == "sample"
+                         || tit.Substring(0, tit.Length - 4).ToLower() == "etrg") return null;
                 }
             }
             else

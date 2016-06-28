@@ -40,6 +40,8 @@ namespace CheckMoviesOut
             this.switchToGridViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gRIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -68,7 +70,9 @@ namespace CheckMoviesOut
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuToolStripMenuItem,
             this.editToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.gRIDToolStripMenuItem,
+            this.tILESToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(883, 24);
@@ -87,8 +91,9 @@ namespace CheckMoviesOut
             // loadFileToolStripMenuItem
             // 
             this.loadFileToolStripMenuItem.Name = "loadFileToolStripMenuItem";
-            this.loadFileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.loadFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loadFileToolStripMenuItem.Text = "Load File";
+            this.loadFileToolStripMenuItem.Click += new System.EventHandler(this.loadFileToolStripMenuItem_Click);
             // 
             // loadFolderToolStripMenuItem
             // 
@@ -131,8 +136,23 @@ namespace CheckMoviesOut
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.aboutToolStripMenuItem.Text = "About";            // 
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // gRIDToolStripMenuItem
+            // 
+            this.gRIDToolStripMenuItem.Name = "gRIDToolStripMenuItem";
+            this.gRIDToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.gRIDToolStripMenuItem.Text = "GRID";
+            this.gRIDToolStripMenuItem.Click += new System.EventHandler(this.gRIDToolStripMenuItem_Click);
+            // 
+            // tILESToolStripMenuItem
+            // 
+            this.tILESToolStripMenuItem.Name = "tILESToolStripMenuItem";
+            this.tILESToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.tILESToolStripMenuItem.Text = "TILES";
+            this.tILESToolStripMenuItem.Click += new System.EventHandler(this.tILESToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.ClientSize = new System.Drawing.Size(883, 478);
@@ -164,6 +184,8 @@ namespace CheckMoviesOut
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem switchToViewToolStripMenuItem;
         private ToolStripMenuItem switchToGridViewToolStripMenuItem;
+        private ToolStripMenuItem gRIDToolStripMenuItem;
+        private ToolStripMenuItem tILESToolStripMenuItem;
     }
 }
 
