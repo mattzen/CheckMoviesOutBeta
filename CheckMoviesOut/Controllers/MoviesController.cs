@@ -18,16 +18,17 @@ namespace CheckMoviesOut
      
         public Tuple<string, string> GetTitleAndYear(string filename)
         {
-
-            string tit = filename;
-
+            string title = filename;
             string[] allowedFormats = { "avi", "mp4", "mp3", "wmv", "m4v", "mpg", "mpeg", "flv", "rmvb", "mov", "mkv" };
-            if (tit.Length > 3)
+
+            if (title.Length > 3)
             {
-                if(tit[tit.Length-4] == '.')
+                if(title[title.Length-4] == '.')
                 {
-                    if (!allowedFormats.Contains(tit.Substring(tit.Length - 3,3).ToLower()) || tit.Substring(0,tit.Length-4).ToLower() == "sample"
-                         || tit.Substring(0, tit.Length - 4).ToLower() == "etrg") return null;
+                    if (!allowedFormats.Contains(title.Substring(title.Length - 3,3).ToLower())
+                        || title.Substring(0,title.Length-4).ToLower() == "sample"
+                        || title.Substring(0, title.Length - 4).ToLower() == "etrg")
+                        return null;
                 }
             }
             else
@@ -35,38 +36,37 @@ namespace CheckMoviesOut
                 return null;
             }
 
-
-            Regex expression2 = new Regex(@"[a-z]*");
-            var results2 = expression2.Matches(tit.ToLower().ToString());
+            Regex reg = new Regex(@"[a-z]*");
+            var result = reg.Matches(title.ToLower().ToString());
 
             string Title = "";
 
             int ctr = 1;
-            foreach (Match match2 in results2)
+            foreach (Match match in result)
             {
 
                 if (ctr <= 10)
                 {
-                    if (match2.ToString().ToLower() != "dvdrip"
-                        && match2.ToString().ToLower() != "bdrip"
-                        && match2.ToString().ToLower() != "webrip"
-                        && match2.ToString().ToLower() != "hdrip"
-                        && match2.ToString().ToLower() != "extended"
-                        && match2.ToString().ToLower() != "limited"
-                        && match2.ToString().ToLower() != "xvid"
-                        && match2.ToString().ToLower() != "dvdrip"
-                        && match2.ToString().ToLower() != "hdrip"
-                        && match2.ToString().ToLower() != "xvi"
-                        && match2.ToString().ToLower() != "brrip"
-                        && match2.ToString().ToLower() != "sdtv"
-                        && match2.ToString().ToLower() != "dvdscr"
-                        && match2.ToString().ToLower() != "hc"
-                        && match2.ToString().ToLower() != "hdts"
-                         && match2.ToString().ToLower() != "hdtv"
+                    if (match.ToString().ToLower() != "dvdrip"
+                        && match.ToString().ToLower() != "bdrip"
+                        && match.ToString().ToLower() != "webrip"
+                        && match.ToString().ToLower() != "hdrip"
+                        && match.ToString().ToLower() != "extended"
+                        && match.ToString().ToLower() != "limited"
+                        && match.ToString().ToLower() != "xvid"
+                        && match.ToString().ToLower() != "dvdrip"
+                        && match.ToString().ToLower() != "hdrip"
+                        && match.ToString().ToLower() != "xvi"
+                        && match.ToString().ToLower() != "brrip"
+                        && match.ToString().ToLower() != "sdtv"
+                        && match.ToString().ToLower() != "dvdscr"
+                        && match.ToString().ToLower() != "hc"
+                        && match.ToString().ToLower() != "hdts"
+                         && match.ToString().ToLower() != "hdtv"
                         )
                     {
 
-                        Title += match2.ToString() + "";
+                        Title += match.ToString() + "";
 
                         if (ctr % 2 == 0)
                         {
@@ -81,10 +81,7 @@ namespace CheckMoviesOut
 
             var Year = GetMovieYear(filename);
 
-
-            //
             return new Tuple<string, string>(Title, Year);
-
         }
 
         private string GetMovieYear(string filename)

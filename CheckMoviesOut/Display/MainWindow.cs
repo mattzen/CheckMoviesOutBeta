@@ -19,6 +19,9 @@ namespace CheckMoviesOut
     {
         private MoviesController _controller;
         private int _rowctr;
+        private List<Tuple<string,string>> _movieTitlesYears;
+        private List<Tuple<string, string>> _unknownMovieTitlesYears;
+
         private List<Movie> _moviesCollection;
         ListView myListView;
         private List<Movie> _unknownMovies;
@@ -32,6 +35,7 @@ namespace CheckMoviesOut
             _controller = new MoviesController();
             _moviesCollection = new List<Movie>();
             _unknownMovies = new List<Movie>();
+            _movieTitlesYears = new List<Tuple<string, string>>();
 
 
         }
@@ -60,6 +64,7 @@ namespace CheckMoviesOut
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
         }
 
+        
         private async void MainWindow_DragDrop(object sender, DragEventArgs e)
         {        
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -71,13 +76,6 @@ namespace CheckMoviesOut
             {
                 await generate_rows(file);
                
-            }
-            string v = "";
-            foreach (var item in _moviesCollection)
-            {
-
-                v += item.FileName;
-
             }
 
         }
@@ -101,7 +99,6 @@ namespace CheckMoviesOut
             }
         }
 
-
         public async Task generate_rows(string path)
         {
             _files = new List<string>();
@@ -112,7 +109,13 @@ namespace CheckMoviesOut
             {
                 var fileName = Path.GetFileName(file);
                 var movieItem = _controller.GetTitleAndYear(fileName);
-                if (string.IsNullOrEmpty(movieItem?.Item1)) continue;
+
+                if (string.IsNullOrEmpty(movieItem?.Item1) || _movieTitlesYears.Contains(movieItem))
+                {
+                    continue;
+                }
+
+                _movieTitlesYears.Add(movieItem);
                 var movie = await _controller.GetMovie(movieItem.Item1, fileName, movieItem.Item2);
                 movie.Image = await _controller.GetImage(movie.ImageUrl, movie.Title);
                 fillNewGridRow(movie);
@@ -121,53 +124,9 @@ namespace CheckMoviesOut
             }
         }
 
-        public void fillNewGridRow(Movie movie)
-        {
-            mainGrid.Rows.Add();
 
-            mainGrid[0, _rowctr].Value = _rowctr;
-            mainGrid[1, _rowctr].Value = movie?.Title;
-            mainGrid[2, _rowctr].Value = movie?.Image;
-            mainGrid[3, _rowctr].Value = movie?.Rating;
-            mainGrid[4, _rowctr].Value = movie?.Votes;
-            mainGrid[5, _rowctr].Value = movie?.Genre;
-            mainGrid[6, _rowctr].Value = movie?.Director;
-            mainGrid[7, _rowctr].Value = movie?.Plot;
-            mainGrid[8, _rowctr].Value = movie?.Stars;
-            mainGrid[9, _rowctr].Value = movie?.RealaseDate;
-            mainGrid[10, _rowctr].Value = movie?.FileName;
 
-            DataGridViewCell linkCell = new DataGridViewLinkCell();
-            linkCell.Value = movie.Url;
-            mainGrid[11, _rowctr] = linkCell;
-
-            mainGrid.Rows[_rowctr].Height = 100;
-        }
-
-        private void mainGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == 11 && e.RowIndex != -1)
-            {
-                string value = mainGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                Process.Start(value);
-            }
-        }
-
-        private async void loadFolderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.SelectedPath = "C:\\";
-
-            DialogResult result = fbd.ShowDialog();
-
-            string sub = fbd.SelectedPath;
-
-            if (sub != "C:\\")
-            {
-               // await _controller.generate_rows(sub);
-
-            }
-        }
+        //Main Grid
 
         private void setCellProps(int col)
         {
@@ -207,14 +166,40 @@ namespace CheckMoviesOut
             }
         }
 
-
-
-
-        private void switchToViewToolStripMenuItem_Click(object sender, EventArgs e)
+        public void fillNewGridRow(Movie movie)
         {
+            mainGrid.Rows.Add();
 
+            mainGrid[0, _rowctr].Value = _rowctr;
+            mainGrid[1, _rowctr].Value = movie?.Title;
+            mainGrid[2, _rowctr].Value = movie?.Image;
+            mainGrid[3, _rowctr].Value = movie?.Rating;
+            mainGrid[4, _rowctr].Value = movie?.Votes;
+            mainGrid[5, _rowctr].Value = movie?.Genre;
+            mainGrid[6, _rowctr].Value = movie?.Director;
+            mainGrid[7, _rowctr].Value = movie?.Plot;
+            mainGrid[8, _rowctr].Value = movie?.Stars;
+            mainGrid[9, _rowctr].Value = movie?.RealaseDate;
+            mainGrid[10, _rowctr].Value = movie?.FileName;
+
+            DataGridViewCell linkCell = new DataGridViewLinkCell();
+            linkCell.Value = movie.Url;
+            mainGrid[11, _rowctr] = linkCell;
+
+            mainGrid.Rows[_rowctr].Height = 100;
         }
 
+        private void mainGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 11 && e.RowIndex != -1)
+            {
+                string value = mainGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                Process.Start(value);
+            }
+        }
+
+
+        //List View
         private void MyListView_ItemActivate(object sender, EventArgs e)
         {
             Form f = new Form();
@@ -234,7 +219,7 @@ namespace CheckMoviesOut
             Label Url = new Label();
 
             f.Size = new Size(800, 500);
-            ListViewItem item = ((ListView)sender).SelectedItems[0];    
+            ListViewItem item = ((ListView)sender).SelectedItems[0];
             Image img = item.ImageList.Images[item.ImageKey];
 
 
@@ -242,7 +227,7 @@ namespace CheckMoviesOut
             Rating.Text = item.SubItems[1].Text.ToString();
             Plot.Text = item.SubItems[2].Text.ToString();
             RealaseDate.Text = item.SubItems[3].Text.ToString();
-           
+
             Genre.Text = item.SubItems[4].Text.ToString();
             Stars.Text = item.SubItems[5].Text.ToString();
             Votes.Text = item.SubItems[6].Text.ToString();
@@ -254,7 +239,7 @@ namespace CheckMoviesOut
 
             Rating.AutoSize = true;
             Rating.Location = new Point(200, 120);
-          
+
             Stars.Location = new Point(200, 140);
             Stars.Width = 600;
             Director.Location = new Point(200, 160);
@@ -300,6 +285,15 @@ namespace CheckMoviesOut
             f.Show();
             f.PerformLayout();
         }
+
+        private void switchToViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+      
+
 
         private void F_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -381,5 +375,22 @@ namespace CheckMoviesOut
         {
 
         }
+
+        private async void loadFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = "C:\\";
+
+            DialogResult result = fbd.ShowDialog();
+
+            string sub = fbd.SelectedPath;
+
+            if (sub != "C:\\")
+            {
+                // await _controller.generate_rows(sub);
+
+            }
+        }
+
     }
 }
