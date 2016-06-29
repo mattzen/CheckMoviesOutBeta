@@ -27,6 +27,9 @@ namespace CheckMoviesOut
         private List<Movie> _unknownMovies;
         List<string> _files;
 
+        List<Movie> movieCollection;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,7 +39,7 @@ namespace CheckMoviesOut
             _moviesCollection = new List<Movie>();
             _unknownMovies = new List<Movie>();
             _movieTitlesYears = new List<Tuple<string, string>>();
-
+            movieCollection = new List<Movie>();
 
         }
 
@@ -104,7 +107,7 @@ namespace CheckMoviesOut
             _files = new List<string>();
             traverse(path);
             var files = _files;
-            _controller.LoadJson();
+            movieCollection = _controller.LoadJson();
             foreach (var file in files)
             {
                 var fileName = Path.GetFileName(file);
@@ -114,7 +117,15 @@ namespace CheckMoviesOut
                 {
                     continue;
                 }
+                if (_controller.isInCollection(fileName))
+                {
+                    var movie1 = movieCollection.FirstOrDefault(x => x.FileName == fileName);
 
+                    fillNewGridRow(movie1);
+                    _moviesCollection.Add(movie1);
+                    _rowctr++;
+                    continue;
+                }
                 _movieTitlesYears.Add(movieItem);
                 var movie = await _controller.GetMovie(movieItem.Item1, fileName, movieItem.Item2);
                 movie.Image = await _controller.GetImage(movie.ImageUrl, movie.Title);
@@ -397,9 +408,9 @@ namespace CheckMoviesOut
             welcomeTextBox.Visible = false;
             mainGrid.Visible = true;
 
-            var movies = _controller.LoadJson();
+            movieCollection = _controller.LoadJson();
 
-            foreach (var movie in movies)
+            foreach (var movie in movieCollection)
             {
                 fillNewGridRow(movie);
                 _moviesCollection.Add(movie);

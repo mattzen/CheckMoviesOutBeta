@@ -254,7 +254,7 @@ namespace CheckMoviesOut
         {
             movieCollection = new List<Movie>();
 
-            using (StreamReader file = File.OpenText(@"c:\\Users\\Matt\\Desktop\\hello.json"))
+                using (StreamReader file = File.OpenText(@"collection.json"))
             {
                 string fil = file.ReadToEnd();
 
@@ -291,7 +291,7 @@ namespace CheckMoviesOut
                 JObject jObj = JObject.Parse(json);
                 jObj.Add("filename", filename);
 
-                using (StreamWriter file = File.AppendText(@"c:\\Users\\Matt\\Desktop\\hello.json"))
+                using (StreamWriter file = File.AppendText(@"collection.json"))
                 using (JsonTextWriter writer = new JsonTextWriter(file))
                 {
                     jObj.WriteTo(writer);
