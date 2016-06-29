@@ -30,6 +30,7 @@ namespace CheckMoviesOut
             public const string ReleaseDateKey = "Year";
             public const string WriterKey = "Writer";
             public const string ImageKey = "Poster";
+            public const string FileNameKey = "filename";
         }
 
         public int Id { get; set; }
@@ -44,7 +45,7 @@ namespace CheckMoviesOut
         public string Plot { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.PlotKey, string.Empty); } set { } }
         public string Stars { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.ActorsKey, string.Empty); } set { } }
         public string RealaseDate { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.ReleaseDateKey, string.Empty); } set { } }
-        public string FileName { get; set; }
+        public string FileName { get { return Infra.GetValueOrDefault(MovieTable, DictionaryKeys.FileNameKey, string.Empty); } set { } }
         public string Url { get; set; }
 
       

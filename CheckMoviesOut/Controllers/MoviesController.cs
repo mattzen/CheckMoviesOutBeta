@@ -15,6 +15,15 @@ namespace CheckMoviesOut
 {
     public class MoviesController
     {
+
+        List<Movie> movieCollection;
+
+
+        public MoviesController()
+        {
+
+        }
+
      
         public Tuple<string, string> GetTitleAndYear(string filename)
         {
@@ -150,6 +159,28 @@ namespace CheckMoviesOut
             return movie;
 
         }
+        public Image GetImageLocal(string url, string tit)
+        {
+            if (string.IsNullOrEmpty(url) || url == "N/A") return null;
+
+            Image img;
+            string dir = Directory.GetCurrentDirectory();
+            string imgs = dir + "/imgs/";
+
+            if (!File.Exists(imgs))
+            {
+                Directory.CreateDirectory(imgs);
+            }
+
+            string curFile = imgs + tit.Replace(":", "").Replace("*", "") + ".jpg";
+
+            {
+                Image webImage = Image.FromFile(curFile);
+                img = webImage;
+            }
+
+            return img;
+        }
 
         public async Task<Image> GetImage(string url, string tit)
         {
@@ -189,29 +220,84 @@ namespace CheckMoviesOut
             return img;
         }
 
-        private Movie ExtractJson(string json, string filename, string title, string year)
+        public Movie ExtractJson(string json, string filename, string title, string year)
         {
-            Movie m = new Movie();
-            m.FileName = filename;
+            Movie movie = new Movie();
+            movie.FileName = filename;
 
             JObject jObj = JObject.Parse(json);
 
+
             foreach (var item in jObj)
             {
-                m.MovieTable.Add(item.Key, item.Value.ToString());
+                movie.MovieTable.Add(item.Key, item.Value.ToString());
             }
 
-            m.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + m.Title + "&s=all&y="+year;
+            movie.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + movie.Title + "&s=all&y="+year;
 
-            if (string.IsNullOrEmpty(m.Title))
+            if (string.IsNullOrEmpty(movie.Title))
             {
-                m.MovieTable["Title"] = title;
-                m.MovieTable["Year"] = year;
-                m.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all&y="+year;
+                movie.MovieTable["Title"] = title;
+                movie.MovieTable["Year"] = year;
+                movie.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all&y=" + year;
             }
+            else
+            {
+                if (!isInCollection(filename))
+                    SaveJson(json, filename);
+            }
+            return movie;
+        }
 
 
-            return m;
+        public List<Movie> LoadJson()
+        {
+            movieCollection = new List<Movie>();
+
+            using (StreamReader file = File.OpenText(@"c:\\Users\\Matt\\Desktop\\hello.json"))
+            {
+                string fil = file.ReadToEnd();
+
+                var split = fil?.Split('\n');
+
+                if (split == null || split?[0] == string.Empty) return null;
+
+                var newsplit = split.Take(split.Length - 1).ToList();
+
+                foreach (var itemek in newsplit)
+                {
+
+                    Movie m = new Movie();
+                    JObject o2 = (JObject)JToken.Parse(itemek);
+                    foreach (var item in o2)
+                    {
+                        m.MovieTable.Add(item.Key, item.Value.ToString());
+                    }
+                    m.Image = GetImageLocal(m.ImageUrl, m.Title);
+                    movieCollection.Add(m);
+                }
+            }
+            return movieCollection;
+
+        }
+
+        public bool isInCollection(string filename)
+        {
+            return movieCollection.Exists(x => x.FileName == filename);
+        }
+
+        public void SaveJson(string json, string filename)
+        {
+                JObject jObj = JObject.Parse(json);
+                jObj.Add("filename", filename);
+
+                using (StreamWriter file = File.AppendText(@"c:\\Users\\Matt\\Desktop\\hello.json"))
+                using (JsonTextWriter writer = new JsonTextWriter(file))
+                {
+                    jObj.WriteTo(writer);
+                    file.Write('\n');
+                }
+
         }
 
     }

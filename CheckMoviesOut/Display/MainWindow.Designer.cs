@@ -42,6 +42,7 @@ namespace CheckMoviesOut
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gRIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -72,7 +73,8 @@ namespace CheckMoviesOut
             this.editToolStripMenuItem,
             this.helpToolStripMenuItem,
             this.gRIDToolStripMenuItem,
-            this.tILESToolStripMenuItem});
+            this.tILESToolStripMenuItem,
+            this.loadLibraryToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(883, 24);
@@ -91,7 +93,7 @@ namespace CheckMoviesOut
             // loadFileToolStripMenuItem
             // 
             this.loadFileToolStripMenuItem.Name = "loadFileToolStripMenuItem";
-            this.loadFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadFileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.loadFileToolStripMenuItem.Text = "Load File";
             this.loadFileToolStripMenuItem.Click += new System.EventHandler(this.loadFileToolStripMenuItem_Click);
             // 
@@ -136,7 +138,7 @@ namespace CheckMoviesOut
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // gRIDToolStripMenuItem
@@ -152,6 +154,13 @@ namespace CheckMoviesOut
             this.tILESToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.tILESToolStripMenuItem.Text = "TILES";
             this.tILESToolStripMenuItem.Click += new System.EventHandler(this.tILESToolStripMenuItem_Click);
+            // 
+            // loadLibraryToolStripMenuItem
+            // 
+            this.loadLibraryToolStripMenuItem.Name = "loadLibraryToolStripMenuItem";
+            this.loadLibraryToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
+            this.loadLibraryToolStripMenuItem.Text = "Load Library";
+            this.loadLibraryToolStripMenuItem.Click += new System.EventHandler(this.loadLibraryToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -186,6 +195,7 @@ namespace CheckMoviesOut
         private ToolStripMenuItem switchToGridViewToolStripMenuItem;
         private ToolStripMenuItem gRIDToolStripMenuItem;
         private ToolStripMenuItem tILESToolStripMenuItem;
+        private ToolStripMenuItem loadLibraryToolStripMenuItem;
     }
 }
 

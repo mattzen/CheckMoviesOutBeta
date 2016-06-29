@@ -104,7 +104,7 @@ namespace CheckMoviesOut
             _files = new List<string>();
             traverse(path);
             var files = _files;
-
+            _controller.LoadJson();
             foreach (var file in files)
             {
                 var fileName = Path.GetFileName(file);
@@ -392,5 +392,20 @@ namespace CheckMoviesOut
             }
         }
 
+        private void loadLibraryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            welcomeTextBox.Visible = false;
+            mainGrid.Visible = true;
+
+            var movies = _controller.LoadJson();
+
+            foreach (var movie in movies)
+            {
+                fillNewGridRow(movie);
+                _moviesCollection.Add(movie);
+                _rowctr++;
+            }
+
+        }
     }
 }
