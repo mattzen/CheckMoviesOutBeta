@@ -32,14 +32,6 @@ namespace CheckMoviesOut
             this.mainGrid = new System.Windows.Forms.DataGridView();
             this.welcomeTextBox = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.switchToViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.switchToGridViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gRIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,9 +61,6 @@ namespace CheckMoviesOut
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuToolStripMenuItem,
-            this.editToolStripMenuItem,
-            this.helpToolStripMenuItem,
             this.gRIDToolStripMenuItem,
             this.tILESToolStripMenuItem,
             this.loadLibraryToolStripMenuItem});
@@ -80,66 +69,6 @@ namespace CheckMoviesOut
             this.menuStrip1.Size = new System.Drawing.Size(883, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // menuToolStripMenuItem
-            // 
-            this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadFileToolStripMenuItem,
-            this.loadFolderToolStripMenuItem});
-            this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
-            this.menuToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.menuToolStripMenuItem.Text = "File";
-            // 
-            // loadFileToolStripMenuItem
-            // 
-            this.loadFileToolStripMenuItem.Name = "loadFileToolStripMenuItem";
-            this.loadFileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.loadFileToolStripMenuItem.Text = "Load File";
-            this.loadFileToolStripMenuItem.Click += new System.EventHandler(this.loadFileToolStripMenuItem_Click);
-            // 
-            // loadFolderToolStripMenuItem
-            // 
-            this.loadFolderToolStripMenuItem.Name = "loadFolderToolStripMenuItem";
-            this.loadFolderToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.loadFolderToolStripMenuItem.Text = "Load Folder";
-            this.loadFolderToolStripMenuItem.Click += new System.EventHandler(this.loadFolderToolStripMenuItem_Click);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.switchToViewToolStripMenuItem,
-            this.switchToGridViewToolStripMenuItem});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // switchToViewToolStripMenuItem
-            // 
-            this.switchToViewToolStripMenuItem.Name = "switchToViewToolStripMenuItem";
-            this.switchToViewToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.switchToViewToolStripMenuItem.Text = "switch to tile view";
-            this.switchToViewToolStripMenuItem.Click += new System.EventHandler(this.switchToViewToolStripMenuItem_Click);
-            // 
-            // switchToGridViewToolStripMenuItem
-            // 
-            this.switchToGridViewToolStripMenuItem.Name = "switchToGridViewToolStripMenuItem";
-            this.switchToGridViewToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.switchToGridViewToolStripMenuItem.Text = "switch to grid view";
-            this.switchToGridViewToolStripMenuItem.Click += new System.EventHandler(this.switchToGridViewToolStripMenuItem_Click);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.aboutToolStripMenuItem.Text = "About";
             // 
             // gRIDToolStripMenuItem
             // 
@@ -185,14 +114,6 @@ namespace CheckMoviesOut
         private DataGridView mainGrid;
         private Label welcomeTextBox;
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem menuToolStripMenuItem;
-        private ToolStripMenuItem helpToolStripMenuItem;
-        private ToolStripMenuItem loadFileToolStripMenuItem;
-        private ToolStripMenuItem loadFolderToolStripMenuItem;
-        private ToolStripMenuItem aboutToolStripMenuItem;
-        private ToolStripMenuItem editToolStripMenuItem;
-        private ToolStripMenuItem switchToViewToolStripMenuItem;
-        private ToolStripMenuItem switchToGridViewToolStripMenuItem;
         private ToolStripMenuItem gRIDToolStripMenuItem;
         private ToolStripMenuItem tILESToolStripMenuItem;
         private ToolStripMenuItem loadLibraryToolStripMenuItem;

@@ -29,6 +29,23 @@ namespace CheckMoviesOut
 
         List<Movie> movieCollection;
 
+        //MAIN ENTRY POINT
+        private async void MainWindow_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            welcomeTextBox.Visible = false;
+            mainGrid.Visible = true;
+
+            foreach (string file in files)
+            {
+                await generate_rows(file);
+
+            }
+
+        }
+
+
 
         public MainWindow()
         {
@@ -62,26 +79,8 @@ namespace CheckMoviesOut
             Dock = DockStyle.Fill;
         }
 
-        private void MainWindow_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
-        }
 
-        
-        private async void MainWindow_DragDrop(object sender, DragEventArgs e)
-        {        
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-            welcomeTextBox.Visible = false;
-            mainGrid.Visible = true;
-            
-            foreach (string file in files)
-            {
-                await generate_rows(file);
-               
-            }
-
-        }
+      
 
         public void traverse(string path)
         {
@@ -111,12 +110,7 @@ namespace CheckMoviesOut
             foreach (var file in files)
             {
                 var fileName = Path.GetFileName(file);
-                var movieItem = _controller.GetTitleAndYear(fileName);
 
-                if (string.IsNullOrEmpty(movieItem?.Item1) || _movieTitlesYears.Contains(movieItem))
-                {
-                    continue;
-                }
                 if (_controller.isInCollection(fileName))
                 {
                     var movie1 = movieCollection.FirstOrDefault(x => x.FileName == fileName);
@@ -126,6 +120,14 @@ namespace CheckMoviesOut
                     _rowctr++;
                     continue;
                 }
+
+                var movieItem = _controller.GetTitleAndYear(fileName);
+
+                if (string.IsNullOrEmpty(movieItem?.Item1) || _movieTitlesYears.Contains(movieItem))
+                {
+                    continue;
+                }
+
                 _movieTitlesYears.Add(movieItem);
                 var movie = await _controller.GetMovie(movieItem.Item1, fileName, movieItem.Item2);
                 movie.Image = await _controller.GetImage(movie.ImageUrl, movie.Title);
@@ -134,7 +136,6 @@ namespace CheckMoviesOut
                 _rowctr++;
             }
         }
-
 
 
         //Main Grid
@@ -226,52 +227,61 @@ namespace CheckMoviesOut
             Label RealaseDate = new Label();
             Label Genre = new Label();
             Label Stars = new Label();
-            Label Votes = new Label();
-            Label Url = new Label();
+            LinkLabel Url = new LinkLabel();
+            
 
-            f.Size = new Size(800, 500);
+
+            f.Size = new Size(810, 460);
             ListViewItem item = ((ListView)sender).SelectedItems[0];
             Image img = item.ImageList.Images[item.ImageKey];
 
 
             Title.Text = item.SubItems[0].Text.ToString();
-            Rating.Text = item.SubItems[1].Text.ToString();
+            Rating.Text = item.SubItems[1].Text.ToString() + " (" + item.SubItems[6].Text.ToString() + " votes)";
             Plot.Text = item.SubItems[2].Text.ToString();
             RealaseDate.Text = item.SubItems[3].Text.ToString();
-
             Genre.Text = item.SubItems[4].Text.ToString();
             Stars.Text = item.SubItems[5].Text.ToString();
-            Votes.Text = item.SubItems[6].Text.ToString();
             Director.Text = item.SubItems[7].Text.ToString();
+            Url.Text = item.SubItems[8].Text.ToString();
 
+
+            Url.Click += Url_Click;
 
             Title.AutoSize = true;
-            Title.Location = new Point(200, 100);
-
-            Rating.AutoSize = true;
-            Rating.Location = new Point(200, 120);
-
-            Stars.Location = new Point(200, 140);
-            Stars.Width = 600;
-            Director.Location = new Point(200, 160);
-            Director.Width = 600;
-
-            Plot.Font = new Font("arial", 16);
-            Plot.Width = 600;
-            Plot.Height = 200;
-            Plot.Location = new Point(200, 180);
-
-            Genre.AutoSize = true;
-            Genre.Location = new Point(200, 380);
+            Title.Font = new Font("arial", 16);
+            Title.Location = new Point(260, 10);
 
             RealaseDate.AutoSize = true;
-            RealaseDate.Location = new Point(200, 400);
+            RealaseDate.Location = new Point(260, 40);
 
-            Votes.AutoSize = true;
-            Votes.Location = new Point(200, 420);
+            Genre.AutoSize = true;
+            Genre.Location = new Point(260, 60);
 
-            px.Location = new Point(0, 0);
-            px.SetBounds(0, 0, 200, 400);
+            Director.AutoSize = true;
+            Director.Location = new Point(260, 80);
+
+
+            Rating.AutoSize = true;
+            Rating.Location = new Point(260, 100);
+
+
+            Stars.Location = new Point(260, 120);
+            Stars.Width = 600;
+
+
+
+            Plot.Font = new Font("arial", 16);
+            Plot.Width = 550;
+            Plot.Height = 150;
+            Plot.Location = new Point(260, 150);
+
+
+            Url.Location = new Point(260, 320);
+            Url.Width = 550;
+
+            px.Location = new Point(10, 10);
+            px.SetBounds(10, 10, 250, 400);
 
             //img.Size = new Size(200, 500);
             px.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -289,33 +299,17 @@ namespace CheckMoviesOut
             f.Controls.Add(RealaseDate);
             f.Controls.Add(Genre);
             f.Controls.Add(Stars);
-
-            //f.Controls.Add(Votes);
-            //f.Controls.Add(Url);
+            f.Controls.Add(Director);
+            f.Controls.Add(Url);
 
             f.Show();
             f.PerformLayout();
         }
 
-        private void switchToViewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Url_Click(object sender, EventArgs e)
         {
-
-        }
-
-
-      
-
-
-        private void F_FormClosing(object sender, FormClosingEventArgs e)
-        {
-          
-        }
-
-        private void switchToGridViewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            myListView.Visible = false;
-
-            mainGrid.Visible = true;
+            var a = (LinkLabel)sender;
+            Process.Start(a.Text);
         }
 
         private void tILESToolStripMenuItem_Click(object sender, EventArgs e)
@@ -374,6 +368,31 @@ namespace CheckMoviesOut
             this.Controls.Add(myListView);
         }
 
+
+
+
+
+        private void MainWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+        }
+
+        private void F_FormClosing(object sender, FormClosingEventArgs e)
+        {
+          
+        }
+
+
+
+        private void switchToGridViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            myListView.Visible = false;
+
+            mainGrid.Visible = true;
+        }
+
+     
+
         private void gRIDToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (myListView==null || myListView.Visible == false) return;
@@ -409,6 +428,8 @@ namespace CheckMoviesOut
             mainGrid.Visible = true;
 
             movieCollection = _controller.LoadJson();
+
+            if (movieCollection == null) return;
 
             foreach (var movie in movieCollection)
             {

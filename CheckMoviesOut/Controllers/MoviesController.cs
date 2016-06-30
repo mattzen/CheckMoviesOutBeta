@@ -15,35 +15,41 @@ namespace CheckMoviesOut
 {
     public class MoviesController
     {
-
         List<Movie> movieCollection;
-
 
         public MoviesController()
         {
-
+            if (!File.Exists("collection.json"))
+            {
+              var s =  File.Create("collection.json");
+              s.Close();
+            }
+           
         }
-
-     
+    
         public Tuple<string, string> GetTitleAndYear(string filename)
         {
             string title = filename;
             string[] allowedFormats = { "avi", "mp4", "mp3", "wmv", "m4v", "mpg", "mpeg", "flv", "rmvb", "mov", "mkv" };
 
-            if (title.Length > 3)
+            if (title.Length > 6)
             {
                 if(title[title.Length-4] == '.')
                 {
-                    if (!allowedFormats.Contains(title.Substring(title.Length - 3,3).ToLower())
-                        || title.Substring(0,title.Length-4).ToLower() == "sample"
+                    if (!allowedFormats.Contains(title.Substring(title.Length - 3, 3).ToLower())
+                        || title.Substring(0, title.Length - 4).ToLower() == "sample"
                         || title.Substring(0, title.Length - 4).ToLower() == "etrg")
+                    {
                         return null;
+                    }
                 }
             }
             else
             {
                 return null;
             }
+
+            title = title.Substring(0, title.Length - 4);
 
             Regex reg = new Regex(@"[a-z]*");
             var result = reg.Matches(title.ToLower().ToString());
@@ -122,16 +128,16 @@ namespace CheckMoviesOut
         public async Task<Movie> GetMovie(string title, string filename, string year)
         {          
 
-            string req = "http://www.omdbapi.com/?t=" + title;
+            string link = "http://www.omdbapi.com/?t=" + title;
 
-            if (!string.IsNullOrEmpty(year)) req += "&y=" + year;
+            if (!string.IsNullOrEmpty(year)) link += "&y=" + year;
 
 
             string ret = "";
 
             Movie movie = new Movie();
 
-            var request = await WebRequest.Create(req).GetResponseAsync();
+            var request = await WebRequest.Create(link).GetResponseAsync();
             try
             {
                 using (Stream responseStream = request.GetResponseStream())
@@ -150,15 +156,19 @@ namespace CheckMoviesOut
                     movie.Plot = errorText;
                 }
                 throw ex;
-            }
-
-            
+            }           
        
-            movie = ExtractJson(ret, filename, title,year);
+            movie = ExtractJson(ret, filename, title, year);
+
+            if (!isInCollection(filename))
+            {
+                SaveJson(ret, filename, title, year);
+            }
 
             return movie;
 
         }
+
         public Image GetImageLocal(string url, string tit)
         {
             if (string.IsNullOrEmpty(url) || url == "N/A") return null;
@@ -233,28 +243,25 @@ namespace CheckMoviesOut
                 movie.MovieTable.Add(item.Key, item.Value.ToString());
             }
 
-            movie.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + movie.Title + "&s=all&y="+year;
+            movie.MovieTable["link"] = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + movie.Title + "&s=all&y="+year;
+            movie.MovieTable["filename"] = filename;
 
             if (string.IsNullOrEmpty(movie.Title))
             {
                 movie.MovieTable["Title"] = title;
                 movie.MovieTable["Year"] = year;
-                movie.Url = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all&y=" + year;
+                movie.MovieTable["link"] = "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all&y=" + year;
             }
-            else
-            {
-                if (!isInCollection(filename))
-                    SaveJson(json, filename);
-            }
+            
+      
             return movie;
         }
-
 
         public List<Movie> LoadJson()
         {
             movieCollection = new List<Movie>();
 
-                using (StreamReader file = File.OpenText(@"collection.json"))
+            using (StreamReader file = File.OpenText("collection.json"))
             {
                 string fil = file.ReadToEnd();
 
@@ -286,12 +293,13 @@ namespace CheckMoviesOut
             return movieCollection.Exists(x => x.FileName == filename);
         }
 
-        public void SaveJson(string json, string filename)
+        public void SaveJson(string json, string filename, string title, string year)
         {
-                JObject jObj = JObject.Parse(json);
-                jObj.Add("filename", filename);
+            JObject jObj = JObject.Parse(json);
+            jObj.Add("filename", filename);
+            jObj.Add("link", "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all&y=" + year);
 
-                using (StreamWriter file = File.AppendText(@"collection.json"))
+            using (StreamWriter file = File.AppendText(@"collection.json"))
                 using (JsonTextWriter writer = new JsonTextWriter(file))
                 {
                     jObj.WriteTo(writer);
