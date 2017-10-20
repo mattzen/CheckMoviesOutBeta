@@ -35,16 +35,18 @@ namespace CheckMoviesOut
             this.gRIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.searchBox = new System.Windows.Forms.TextBox();
+            this.searchButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mainGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainGrid
             // 
-            this.mainGrid.Location = new System.Drawing.Point(12, 32);
+            this.mainGrid.Location = new System.Drawing.Point(12, 53);
             this.mainGrid.MinimumSize = new System.Drawing.Size(600, 400);
             this.mainGrid.Name = "mainGrid";
-            this.mainGrid.Size = new System.Drawing.Size(856, 456);
+            this.mainGrid.Size = new System.Drawing.Size(856, 417);
             this.mainGrid.TabIndex = 0;
             this.mainGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.mainGrid_CellContentClick);
             // 
@@ -91,9 +93,28 @@ namespace CheckMoviesOut
             this.loadLibraryToolStripMenuItem.Text = "Load Library";
             this.loadLibraryToolStripMenuItem.Click += new System.EventHandler(this.loadLibraryToolStripMenuItem_Click);
             // 
+            // searchBox
+            // 
+            this.searchBox.Location = new System.Drawing.Point(507, 27);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(275, 20);
+            this.searchBox.TabIndex = 3;
+            // 
+            // searchButton
+            // 
+            this.searchButton.Location = new System.Drawing.Point(793, 24);
+            this.searchButton.Name = "searchButton";
+            this.searchButton.Size = new System.Drawing.Size(75, 23);
+            this.searchButton.TabIndex = 4;
+            this.searchButton.Text = "Search";
+            this.searchButton.UseVisualStyleBackColor = true;
+            this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
+            // 
             // MainWindow
             // 
             this.ClientSize = new System.Drawing.Size(883, 478);
+            this.Controls.Add(this.searchButton);
+            this.Controls.Add(this.searchBox);
             this.Controls.Add(this.welcomeTextBox);
             this.Controls.Add(this.mainGrid);
             this.Controls.Add(this.menuStrip1);
@@ -117,6 +138,8 @@ namespace CheckMoviesOut
         private ToolStripMenuItem gRIDToolStripMenuItem;
         private ToolStripMenuItem tILESToolStripMenuItem;
         private ToolStripMenuItem loadLibraryToolStripMenuItem;
+        private TextBox searchBox;
+        private Button searchButton;
     }
 }
 

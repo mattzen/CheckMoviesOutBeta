@@ -16,6 +16,7 @@ C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesO
 C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csproj.GenerateResource.Cache
 C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.exe
 C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.pdb
-C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csprojResolveAssemblyReference.cache
 C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csproj.CoreCompileInputs.cache
+C:\Users\Matt\Desktop\repos\CheckMovie\CheckMoviesOut\obj\x86\Debug\CheckMoviesOut.csprojResolveAssemblyReference.cache

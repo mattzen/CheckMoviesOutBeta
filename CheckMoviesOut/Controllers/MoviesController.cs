@@ -125,7 +125,7 @@ namespace CheckMoviesOut
             return build;
         }
 
-        public async Task<Movie> GetMovie(string title, string filename, string year)
+        public async Task<Movie> GetMovie(string title, string filename, string year, string location)
         {          
 
             string link = "http://www.omdbapi.com/?t=" + title;
@@ -137,9 +137,10 @@ namespace CheckMoviesOut
 
             Movie movie = new Movie();
 
-            var request = await WebRequest.Create(link).GetResponseAsync();
+            
             try
             {
+                var request = await WebRequest.Create(link).GetResponseAsync();
                 using (Stream responseStream = request.GetResponseStream())
                 {
                     StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
@@ -162,9 +163,10 @@ namespace CheckMoviesOut
 
             if (!isInCollection(filename))
             {
-                SaveJson(ret, filename, title, year);
+                SaveJson(ret, filename, title, year, location);
             }
 
+            movie.Location = location;
             return movie;
 
         }
@@ -293,12 +295,12 @@ namespace CheckMoviesOut
             return movieCollection.Exists(x => x.FileName == filename);
         }
 
-        public void SaveJson(string json, string filename, string title, string year)
+        public void SaveJson(string json, string filename, string title, string year, string location)
         {
             JObject jObj = JObject.Parse(json);
             jObj.Add("filename", filename);
             jObj.Add("link", "http://www.imdb.com/find?ref_=nv_sr_fn&q=" + title + "&s=all&y=" + year);
-
+            jObj.Add("location", location);
             using (StreamWriter file = File.AppendText(@"collection.json"))
                 using (JsonTextWriter writer = new JsonTextWriter(file))
                 {
