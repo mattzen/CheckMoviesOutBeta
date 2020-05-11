@@ -29,6 +29,8 @@ namespace CheckMoviesOut
         private string currentPathLocation = string.Empty;
         List<Movie> movieCollection;
 
+        List<Movie> foundMovies;
+
         //MAIN ENTRY POINT
         private async void MainWindow_DragDrop(object sender, DragEventArgs e)
         {
@@ -224,7 +226,7 @@ namespace CheckMoviesOut
         private void MyListView_ItemActivate(object sender, EventArgs e)
         {
             Form f = new Form();
-
+            f.BackColor = Color.White;
             f.FormClosing += F_FormClosing;
 
             PictureBox px = new PictureBox();
@@ -445,6 +447,64 @@ namespace CheckMoviesOut
 
         }
 
+
+        public void YearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void AlphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void RatingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var imageList = new ImageList();
+            myListView.Items.Clear();
+            var coll = foundMovies;
+            foreach (var item in coll.OrderByDescending(x=>x.Rating))
+            {
+                var movie = item;
+                if (movie.Image != null)
+                {
+                    imageList.Images.Add(movie.FileName, movie.Image);
+                    imageList.ImageSize = new Size(150, 250);
+                    string[] arr = new string[10];
+                    arr[0] = movie.Title;
+                    arr[1] = movie.Rating;
+                    arr[2] = movie.Plot;
+                    arr[3] = movie.RealaseDate;
+                    arr[4] = movie.Genre;
+                    arr[5] = movie.Stars;
+                    arr[6] = movie.Votes;
+                    arr[7] = movie.Director;
+                    arr[8] = movie.Url;
+                    arr[9] = movie.Writer;
+                    ListViewItem itemek = new ListViewItem(arr, movie.FileName);
+                    myListView.Items.Add(itemek);
+                }
+                else if (item.MovieTable.Count > 9)
+                {
+                    string[] arr = new string[10];
+                    arr[0] = movie.Title;
+                    arr[1] = movie.Rating;
+                    arr[2] = movie.Plot;
+                    arr[3] = movie.RealaseDate;
+                    arr[4] = movie.Genre;
+                    arr[5] = movie.Stars;
+                    arr[6] = movie.Votes;
+                    arr[7] = movie.Director;
+                    arr[8] = movie.Url;
+                    arr[9] = movie.Writer;
+                    ListViewItem itemek = new ListViewItem(arr, movie.FileName);
+                    myListView.Items.Add(itemek);
+
+                }
+            }
+            myListView.LargeImageList = imageList;
+        }
+
         private void searchButton_Click(object sender, EventArgs e)
         {
 
@@ -453,25 +513,20 @@ namespace CheckMoviesOut
                 var val = searchBox.Text.ToUpper();
                 var imageList = new ImageList();
                 myListView.Items.Clear();
-                List<Movie> foundMovies = new List<Movie>();
+                foundMovies = new List<Movie>();
                 foreach (var movie in _moviesCollection)
                 {
                     if (movie.Title.ToUpper().Contains(val) ||
                         movie.Genre.ToUpper().Contains(val) ||
                         movie.Plot.ToUpper().Contains(val) ||
                         movie.Stars.ToUpper().Contains(val) ||
-                        movie.Rating.Contains(val))
+                        movie.Rating.Contains(val) ||
+                        movie.RealaseDate.Contains(val))
                     {
                         foundMovies.Add(movie);
                     }
                 }
-
-
-
                 var coll = foundMovies;
-
-
-
                 foreach (var item in coll)
                 {
                     var movie = item;
@@ -518,5 +573,8 @@ namespace CheckMoviesOut
                 myListView.LargeImageList = imageList;
             }
         }
+
+
+
     }
 }
