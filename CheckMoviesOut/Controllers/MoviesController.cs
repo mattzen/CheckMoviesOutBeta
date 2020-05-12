@@ -128,7 +128,7 @@ namespace CheckMoviesOut
         public async Task<Movie> GetMovie(string title, string filename, string year, string location)
         {          
 
-            string link = "http://www.omdbapi.com/?t=" + title;
+            string link = "http://www.omdbapi.com/?apikey=ea90b3fb&t=" + title;
 
             if (!string.IsNullOrEmpty(year)) link += "&y=" + year;
 
