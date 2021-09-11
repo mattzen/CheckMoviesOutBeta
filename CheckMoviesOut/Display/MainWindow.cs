@@ -240,6 +240,8 @@ namespace CheckMoviesOut
             Label Stars = new Label();
             LinkLabel Url = new LinkLabel();
 
+            Label openFile = new Label();
+
             LinkLabel Location = new LinkLabel();
 
             f.Size = new Size(810, 460);
@@ -255,9 +257,13 @@ namespace CheckMoviesOut
             Stars.Text = item.SubItems[5].Text.ToString();
             Director.Text = item.SubItems[7].Text.ToString();
             Url.Text = item.SubItems[8].Text.ToString();
-
+            openFile.Text = "play movie";
 
             Url.Click += Url_Click;
+            openFile.Click += (senderr, ee) => OpenFileClick(senderr, ee, item.SubItems[10].Text.ToString());
+
+
+    
 
             Title.AutoSize = true;
             Title.Font = new Font("arial", 16);
@@ -287,9 +293,18 @@ namespace CheckMoviesOut
             Plot.Height = 150;
             Plot.Location = new Point(260, 150);
 
+  
 
-            Url.Location = new Point(260, 320);
+
+            Url.Location = new Point(260, 390);
             Url.Width = 550;
+
+            openFile.Font = new Font("arial", 40);
+            openFile.Width = 550;
+            openFile.Height = 150;
+            openFile.Location = new Point(260, 300);
+
+
 
             px.Location = new Point(10, 10);
             px.SetBounds(10, 10, 250, 400);
@@ -308,9 +323,27 @@ namespace CheckMoviesOut
             f.Controls.Add(Stars);
             f.Controls.Add(Director);
             f.Controls.Add(Url);
+            f.Controls.Add(openFile);
 
             f.Show();
             f.PerformLayout();
+        }
+
+        private void OpenFile_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OpenFileClick(object sender, EventArgs e, string filePath)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(filePath);
+            }
+            catch
+            {
+
+            }
         }
 
         private void Url_Click(object sender, EventArgs e)
@@ -349,7 +382,7 @@ namespace CheckMoviesOut
 
                     imageList.Images.Add(movie.FileName, movie.Image);
                     imageList.ImageSize = new Size(150, 250);
-                    string[] arr = new string[10];
+                    string[] arr = new string[11];
                     arr[0] = movie.Title;
                     arr[1] = movie.Rating;
                     arr[2] = movie.Plot;
@@ -360,6 +393,7 @@ namespace CheckMoviesOut
                     arr[7] = movie.Director;
                     arr[8] = movie.Url;
                     arr[9] = movie.Writer;
+                    arr[10] = movie.Location;
                     ListViewItem itemek = new ListViewItem(arr, movie.FileName);
                     myListView.Items.Add(itemek);
                 }
